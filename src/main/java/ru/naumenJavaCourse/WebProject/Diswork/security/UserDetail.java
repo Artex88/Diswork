@@ -8,13 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 
-public class UserDetail implements UserDetails {
+public record UserDetail(User user) implements UserDetails {
     
-    private final User user;
-    @Autowired
-    public UserDetail(User user) {
-        this.user = user;
-    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

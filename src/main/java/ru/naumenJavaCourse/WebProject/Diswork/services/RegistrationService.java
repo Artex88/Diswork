@@ -1,4 +1,4 @@
-package ru.naumenJavaCourse.WebProject.Diswork.security;
+package ru.naumenJavaCourse.WebProject.Diswork.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
