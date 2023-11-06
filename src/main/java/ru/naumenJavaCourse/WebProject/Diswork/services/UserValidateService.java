@@ -15,8 +15,7 @@ public class UserValidateService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findUserByLogin(String login){
-        Optional<User> user = userRepository.findByLogin(login);
-        return user;
+    public Optional<User> findUserByLogin(String username){
+        return userRepository.findByUsername(username);
     }
 }

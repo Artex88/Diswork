@@ -24,7 +24,7 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
-        if (userValidateService.findUserByLogin(user.getLogin()).isEmpty())
-            errors.rejectValue("username","","Человек с таким пользователем существует");
+        if (userValidateService.findUserByLogin(user.getUsername()).isPresent())
+            errors.rejectValue("username","","Человек с таким логином существует");
     }
 }

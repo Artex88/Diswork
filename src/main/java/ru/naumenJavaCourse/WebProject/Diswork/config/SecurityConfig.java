@@ -35,6 +35,10 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         // конфигурируем авторизацию
+        http
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/auth/login","/auth/registration","/error").permitAll().anyRequest().hasAnyRole("USER","ADMIN"))
+                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/hello",true).failureUrl("/auth/login?error"))
+                .logout(log -> log.logoutUrl("/logout").logoutSuccessUrl("/auth/login"));
         return http.build();
     }
 }

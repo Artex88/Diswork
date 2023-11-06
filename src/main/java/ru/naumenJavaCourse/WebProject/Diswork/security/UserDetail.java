@@ -1,11 +1,12 @@
 package ru.naumenJavaCourse.WebProject.Diswork.security;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 
 public record UserDetail(User user) implements UserDetails {
@@ -14,7 +15,7 @@ public record UserDetail(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override
@@ -24,7 +25,7 @@ public record UserDetail(User user) implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getLogin();
+        return this.user.getUsername();
     }
 
     @Override
