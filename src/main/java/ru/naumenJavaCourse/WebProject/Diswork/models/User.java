@@ -1,4 +1,4 @@
-package models;
+package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
 
