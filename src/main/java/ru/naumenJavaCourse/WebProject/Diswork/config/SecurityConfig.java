@@ -1,0 +1,44 @@
+package ru.naumenJavaCourse.WebProject.Diswork.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import ru.naumenJavaCourse.WebProject.Diswork.services.UserDetailService;
+@Configuration
+@EnableMethodSecurity
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final UserDetailService userDetailService;
+
+    public SecurityConfig(UserDetailService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        // конфигурируем авторизацию
+        http
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/auth/login","/auth/registration","/error").permitAll().anyRequest().hasAnyRole("USER","ADMIN"))
+                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/hello",true).failureUrl("/auth/login?error"))
+                .logout(log -> log.logoutUrl("/logout").logoutSuccessUrl("/auth/login"));
+        return http.build();
+    }
+}
