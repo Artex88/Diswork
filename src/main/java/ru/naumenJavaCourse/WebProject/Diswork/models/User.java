@@ -1,6 +1,8 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -11,8 +13,12 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 30 символов длиной")
     @Column(name = "username")
     private String username;
+    @NotEmpty(message = "Пароль не должнем быть пустым")
+    @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 18 символов длиной")
     @Column(name = "password")
     private String password;
     @Column(name = "role")
