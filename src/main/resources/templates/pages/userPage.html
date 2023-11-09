@@ -6,6 +6,8 @@
 </head>
 <body>
     User Page
-    <a href="/logout">Выйти из аккаунта</a>
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Logout">
+    </form>
 </body>
 </html>
