@@ -45,6 +45,6 @@ public record UserDetail(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

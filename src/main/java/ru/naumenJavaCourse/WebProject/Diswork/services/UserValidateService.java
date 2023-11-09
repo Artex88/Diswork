@@ -1,5 +1,6 @@
 package ru.naumenJavaCourse.WebProject.Diswork.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.UserRepository;
@@ -11,6 +12,7 @@ public class UserValidateService {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public UserValidateService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
