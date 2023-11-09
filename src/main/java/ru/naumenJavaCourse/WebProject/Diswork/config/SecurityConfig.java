@@ -36,9 +36,9 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         // конфигурируем авторизацию
         http
-                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/auth/login","/auth/registration","/error").permitAll().anyRequest().hasAnyRole("USER","ADMIN"))
-                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/auth/registration",true).failureUrl("/auth/login?error"))
-                .logout(log -> log.logoutUrl("/logout").logoutSuccessUrl("/auth/login"));
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/pages/adminPage").hasRole("ADMIN").requestMatchers("/auth/login","/auth/registration","index","/error").permitAll().anyRequest().hasAnyRole("USER","ADMIN"))
+                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/default",true).failureUrl("/auth/login?error"))
+                .logout(log -> log.logoutUrl("/logout").logoutSuccessUrl("/index"));
         return http.build();
     }
 }
