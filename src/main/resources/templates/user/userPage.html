@@ -5,7 +5,7 @@
     <title>Diswork</title>
 </head>
 <body>
-    <p th:text="${'Добро пожаловать в свой личный кабинет' + user.getUsername() + 'твой id' + user.getId()}">VALUE</p>
+    <p th:text="${'Добро пожаловать в свой личный кабинет ' + user.getUsername() + ' твой id ' + user.getId()}">VALUE</p>
     <p th:text="${'Он пока слегка недоработан, но работы ведутся'}">VALUE</p>
     <br>
     <div th:if="${errorMessage}" style="color: red">

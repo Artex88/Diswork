@@ -53,27 +53,10 @@ public class AuthController {
     }
 
     @GetMapping("/default")
-    public String pagesRedirect(HttpServletRequest request, HttpServletResponse response){
-        String id = String.valueOf(userService.findByUsername(request.getRemoteUser()).getId());
-        Cookie auth_Cookie = new Cookie("id", id);
-        auth_Cookie.setMaxAge(24*60*60);
-        auth_Cookie.setPath("/");
-        auth_Cookie.setSecure(true);
-        auth_Cookie.setHttpOnly(true);
-        response.addCookie(auth_Cookie);
+    public String pagesRedirect(HttpServletRequest request){;
         if (request.isUserInRole("ADMIN"))
             return "redirect:/admin/adminPage/";
         else
             return "redirect:/user/userPage/";
     }
-    /*
-    private ModelAndView createModelAndView(String viewName, int id) {
-        if (getId() == id)
-            return new ModelAndView(viewName, "user", userService.findById(id));
-        else
-        {
-            return new ModelAndView("errors/error", "error", new DoNotHavePermissionError("У вас не прав"));
-        }
-    }
-     */
 }
