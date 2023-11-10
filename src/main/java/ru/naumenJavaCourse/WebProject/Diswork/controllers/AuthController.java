@@ -1,5 +1,8 @@
 package ru.naumenJavaCourse.WebProject.Diswork.controllers;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.dto.ConverterUser;
 import ru.naumenJavaCourse.WebProject.Diswork.dto.UserDTO;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
 import ru.naumenJavaCourse.WebProject.Diswork.services.RegistrationService;
+import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
 import ru.naumenJavaCourse.WebProject.Diswork.util.UserValidator;
 
 @Controller
@@ -20,12 +24,13 @@ public class AuthController {
 
     private  final UserValidator userValidator;
     private  final RegistrationService registrationService;
-
+    private final UserService userService;
     private final ConverterUser converterUser;
     @Autowired
-    public AuthController(UserValidator userValidator, RegistrationService registrationService, ConverterUser converterUser) {
+    public AuthController(UserValidator userValidator, RegistrationService registrationService, UserService userService, ConverterUser converterUser) {
         this.userValidator = userValidator;
         this.registrationService = registrationService;
+        this.userService = userService;
         this.converterUser = converterUser;
     }
 
@@ -46,4 +51,29 @@ public class AuthController {
         registrationService.register(user);
         return "redirect:/auth/login";
     }
+
+    @GetMapping("/default")
+    public String pagesRedirect(HttpServletRequest request, HttpServletResponse response){
+        String id = String.valueOf(userService.findByUsername(request.getRemoteUser()).getId());
+        Cookie auth_Cookie = new Cookie("id", id);
+        auth_Cookie.setMaxAge(24*60*60);
+        auth_Cookie.setPath("/");
+        auth_Cookie.setSecure(true);
+        auth_Cookie.setHttpOnly(true);
+        response.addCookie(auth_Cookie);
+        if (request.isUserInRole("ADMIN"))
+            return "redirect:/admin/adminPage/";
+        else
+            return "redirect:/user/userPage/";
+    }
+    /*
+    private ModelAndView createModelAndView(String viewName, int id) {
+        if (getId() == id)
+            return new ModelAndView(viewName, "user", userService.findById(id));
+        else
+        {
+            return new ModelAndView("errors/error", "error", new DoNotHavePermissionError("У вас не прав"));
+        }
+    }
+     */
 }

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<p th:text="${'Добро пожаловать в свой личный кабинет АДМИН' + user.getUsername() + 'твой id' + user.getId()}">VALUE</p>
+<p th:text="${'Он пока слегка недоработан, но работы ведутся'}">VALUE</p>
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Logout">
+    </form>
+</body>
+</html>
