@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Diswork</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/createTag/}" th:object="${tag}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <label for="tagName">Название тэга: </label>
+    <input type="text" th:field="*{tagName}" id="tagName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('tagName')}" th:errors="*{tagName}">Name Error</div>
+    <br/>
+    <label for="description">Описание тэга: </label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+    <br/>
+    <input type="submit" value="Создать тэг!"/>
+    <a href="/admin/adminPage/">Вернуться на главную</a>
+</form>
+</body>
+</html>

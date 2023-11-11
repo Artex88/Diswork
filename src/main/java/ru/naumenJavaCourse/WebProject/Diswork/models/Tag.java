@@ -2,6 +2,7 @@ package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -15,8 +16,12 @@ public class Tag {
 
     @Column(name = "name")
     @NotNull
+    @Size(min = 1, message = "Название тэга не должно быть пустым")
     private String tagName;
-    @ManyToMany(mappedBy = "media")
+
+    @Column(name = "description")
+    private String description;
+    @ManyToMany(mappedBy = "tags")
     private List<Media> mediaList;
 
     public Tag() {
@@ -44,5 +49,13 @@ public class Tag {
 
     public void setMediaList(List<Media> mediaList) {
         this.mediaList = mediaList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

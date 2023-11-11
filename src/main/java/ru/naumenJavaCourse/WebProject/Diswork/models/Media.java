@@ -17,7 +17,6 @@ public class Media {
     @NotNull
     private String mediaName;
     @Column(name = "description")
-    @NotNull
     private String description;
     @Column(name = "type")
     @NotNull
