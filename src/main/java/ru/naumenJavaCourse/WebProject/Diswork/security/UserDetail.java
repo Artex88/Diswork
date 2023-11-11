@@ -10,8 +10,11 @@ import java.util.Collections;
 
 
 public record UserDetail(User user) implements UserDetails {
-    
 
+    @Override
+    public User user() {
+        return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

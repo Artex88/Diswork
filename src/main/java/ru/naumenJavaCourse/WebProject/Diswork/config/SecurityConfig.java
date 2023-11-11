@@ -10,17 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.naumenJavaCourse.WebProject.Diswork.services.UserDetailService;
+
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final UserDetailService userDetailService;
-
-    public SecurityConfig(UserDetailService userDetailService) {
-        this.userDetailService = userDetailService;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -34,10 +28,9 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        // конфигурируем авторизацию
         http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/pages/adminPage").hasRole("ADMIN").requestMatchers("/auth/login","/auth/registration","index","/error").permitAll().anyRequest().hasAnyRole("USER","ADMIN"))
-                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/default",true).failureUrl("/auth/login?error"))
+                .formLogin(formLogin -> formLogin.loginPage("/auth/login").loginProcessingUrl("/process_login").defaultSuccessUrl("/auth/default",true).failureUrl("/auth/login?error"))
                 .logout(log -> log.logoutUrl("/logout").logoutSuccessUrl("/index"));
         return http.build();
     }
