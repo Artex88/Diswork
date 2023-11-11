@@ -3,9 +3,7 @@ package ru.naumenJavaCourse.WebProject.Diswork.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
 
@@ -21,8 +19,9 @@ public class UserController {
     }
 
     @GetMapping("/user/userPage/")
-    public ModelAndView showUserPage(@CookieValue(value = "id", defaultValue = "Atta") String id)
+    public ModelAndView showUserPage()
     {
-        return new ModelAndView("/user/userPage", "user", userService.findById(Integer.parseInt(id)));
+        int id = (int) request.getSession().getAttribute("id");
+        return new ModelAndView("/user/userPage", "user", userService.findById(id));
     }
 }

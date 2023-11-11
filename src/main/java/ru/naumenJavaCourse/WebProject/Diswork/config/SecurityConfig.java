@@ -10,17 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.naumenJavaCourse.WebProject.Diswork.services.UserDetailService;
+
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final UserDetailService userDetailService;
-
-    public SecurityConfig(UserDetailService userDetailService) {
-        this.userDetailService = userDetailService;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

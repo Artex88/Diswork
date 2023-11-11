@@ -21,7 +21,8 @@ public class AdminController {
     }
 
     @GetMapping("/admin/adminPage/")
-    public ModelAndView showAdminPage(@CookieValue(value = "id", defaultValue = "Atta") String id){
-        return new ModelAndView("/admin/adminPage", "user", userService.findById(Integer.parseInt(id)));
+    public ModelAndView showAdminPage(){
+        int id = (int) request.getSession().getAttribute("id");
+        return new ModelAndView("/admin/adminPage", "user", userService.findById((id)));
     }
 }

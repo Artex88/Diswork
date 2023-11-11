@@ -38,10 +38,12 @@ public class AuthController {
     public String loginPage(){
         return "auth/login";
     }
+
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("user") User person){
         return "/auth/registration";
     }
+
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("user") @Valid UserDTO userDTO, BindingResult bindingResult){
         User user = converterUser.convertToUser(userDTO);
@@ -54,6 +56,8 @@ public class AuthController {
 
     @GetMapping("/default")
     public String pagesRedirect(HttpServletRequest request){;
+        int id = userService.findByUsername(request.getRemoteUser()).getId();
+        request.getSession().setAttribute("id", id);
         if (request.isUserInRole("ADMIN"))
             return "redirect:/admin/adminPage/";
         else
