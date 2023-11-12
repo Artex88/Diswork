@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.TagRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +25,10 @@ public class TagService {
 
     public Optional<Tag> findByName(String name){
         return tagRepository.findByTagName(name);
+    }
+
+    @Transactional
+    public List<Tag> getAll(){
+        return tagRepository.findAll();
     }
 }

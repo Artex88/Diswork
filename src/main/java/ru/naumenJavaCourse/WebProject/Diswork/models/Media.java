@@ -2,6 +2,7 @@ package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.sql.Time;
 import java.util.List;
@@ -15,20 +16,27 @@ public class Media {
     private int id;
     @Column(name = "name")
     @NotNull
+    @Size(min = 1, message = "Название не должно быть пустым")
     private String mediaName;
     @Column(name = "description")
+    @NotNull
     private String description;
     @Column(name = "type")
     @NotNull
+    @Size(min = 1, message = "Жанр не должен быть")
     private String type;
     @Column(name = "age_rating")
+    @NotNull
     private String age_rating;
     @Column(name = "duration")
-    private Time duration;
+    @NotNull
+    private int duration;
     @Column(name = "episode_count")
+    @NotNull
     private int episode_count;
 
     @ManyToMany
+    @NotNull
     @JoinTable(
             name = "media_tag",
             joinColumns = @JoinColumn(name = "media_id"),
@@ -37,6 +45,14 @@ public class Media {
     private List<Tag> tags;
 
     public Media() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMediaName() {
@@ -71,11 +87,11 @@ public class Media {
         this.age_rating = age_rating;
     }
 
-    public Time getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 

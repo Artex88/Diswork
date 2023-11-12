@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/createMedia}" th:object="${media}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    <label for="mediaName">Название произведения: </label>
+    <input type="text" th:field="*{mediaName}" id="mediaName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('mediaName')}" th:errors="*{mediaName}">Name Error</div>
+    <br/>
+
+    <label for="type">Жанр произведения: </label>
+    <input type="text" th:field="*{type}" id="type"/>
+    <div style="color:red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Description Error</div>
+    <br/>
+
+    <label for="description">Краткое описание произведения: </label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+    <br/>
+
+    <label for="age_rating">Возрастное ограничение: </label>
+    <input type="text" th:field="*{age_rating}" id="age_rating"/>
+    <div style="color:red" th:if="${#fields.hasErrors('age_rating')}" th:errors="*{age_rating}">Description Error</div>
+    <br/>
+
+    <label for="duration">Длительность(если фильм); Указывать в минутах: </label>
+    <input type="text" th:field="*{duration}" id="duration"/>
+    <div style="color:red" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Description Error</div>
+    <br/>
+
+    <label for="episode_count">Количество серий в сезоне(если сериал): </label>
+    <input type="text" th:field="*{episode_count}" id="episode_count"/>
+    <div style="color:red" th:if="${#fields.hasErrors('episode_count')}" th:errors="*{episode_count}">Description Error</div>
+    <br/>
+
+    <label for="tags">Тэги: </label>
+    <select id="tags" th:object="${media}" th:field="*{tags}" multiple>
+        <option th:each="oneTag: ${tagList}"  th:value="${oneTag.getId()}" th:text="${oneTag.tagName}"></option>
+    </select>
+    <input type="submit"  value="Создать произведение!"/>
+    <br>
+    <br>
+    <br>
+    <a href="/admin/adminPage/">Вернуться на главную</a>
+</form>
+
+</body>
+</html>

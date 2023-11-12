@@ -20,6 +20,7 @@ public class Tag {
     private String tagName;
 
     @Column(name = "description")
+    @NotNull
     private String description;
     @ManyToMany(mappedBy = "tags")
     private List<Media> mediaList;
