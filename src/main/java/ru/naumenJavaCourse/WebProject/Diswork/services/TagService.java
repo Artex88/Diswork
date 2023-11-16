@@ -22,12 +22,12 @@ public class TagService {
     public void save(Tag tag){
         tagRepository.save(tag);
     }
-
+    @Transactional(readOnly = true)
     public Optional<Tag> findByName(String name){
         return tagRepository.findByTagName(name);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Tag> getAll(){
         return tagRepository.findAll();
     }

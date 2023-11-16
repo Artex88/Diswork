@@ -15,6 +15,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.TagService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
+import ru.naumenJavaCourse.WebProject.Diswork.util.MediaValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TagValidator;
 
 @Controller
@@ -27,13 +28,16 @@ public class AdminController {
     private final TagService tagService;
 
     private final TagValidator tagValidator;
+
+    private final MediaValidator mediaValidator;
     @Autowired
-    public AdminController(HttpServletRequest request, UserService userService, MediaService mediaService, TagService tagService, TagValidator tagValidator) {
+    public AdminController(HttpServletRequest request, UserService userService, MediaService mediaService, TagService tagService, TagValidator tagValidator, MediaValidator mediaValidator) {
         this.request = request;
         this.userService = userService;
         this.mediaService = mediaService;
         this.tagService = tagService;
         this.tagValidator = tagValidator;
+        this.mediaValidator = mediaValidator;
     }
 
     @GetMapping("/admin/adminPage/")
@@ -65,7 +69,7 @@ public class AdminController {
 
     @PostMapping("/admin/createMedia")
     public String createMedia(@ModelAttribute("media") @Valid Media media, BindingResult bindingResult){
-        // место для валидатора //TODO
+        mediaValidator.validate(media, bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createMedia";
 
