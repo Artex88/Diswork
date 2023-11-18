@@ -22,6 +22,7 @@ public class User {
     @Column(name = "password")
     private String password;
     @Column(name = "role")
+    @NotEmpty
     private String role;
     @Column(name = "created_at")
     private LocalDateTime created_at;
