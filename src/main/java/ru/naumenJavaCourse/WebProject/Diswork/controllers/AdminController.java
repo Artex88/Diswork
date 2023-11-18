@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
@@ -68,12 +67,12 @@ public class AdminController {
     }
 
     @PostMapping("/admin/createMedia")
-    public String createMedia(@ModelAttribute("media") @Valid Media media, BindingResult bindingResult){
+    public String createMedia(@ModelAttribute("media") @Valid Media media, @RequestPart(name = "imageFile") MultipartFile imageFile, BindingResult bindingResult){
         mediaValidator.validate(media, bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createMedia";
 
-        mediaService.save(media);
+        mediaService.save(media, imageFile);
         return "redirect:/admin/adminPage/";
     }
 }

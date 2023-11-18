@@ -1,6 +1,7 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -16,17 +17,22 @@ public class Media {
     private int id;
     @Column(name = "name")
     @NotNull
-    @Size(min = 1, message = "Название не должно быть пустым")
+    @NotEmpty( message = "Название не должно быть пустым")
     private String mediaName;
     @Column(name = "description")
     @NotNull
+    @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
     @Column(name = "type")
     @NotNull
-    @Size(min = 1, message = "Жанр не должен быть")
+    @NotEmpty(message = "Тип произведения не должен быть пустым")
     private String type;
+
+    @Column(name = "poster_link")
+    private String posterLink;
     @Column(name = "age_rating")
     @NotNull
+    @NotEmpty(message = "Возрастной рейтинг не должен быть пустым")
     private String age_rating;
     @Column(name = "duration")
     @NotNull
@@ -45,6 +51,14 @@ public class Media {
     private List<Tag> tags;
 
     public Media() {
+    }
+
+    public String getPosterLink() {
+        return posterLink;
+    }
+
+    public void setPosterLink(String posterLink) {
+        this.posterLink = posterLink;
     }
 
     public int getId() {

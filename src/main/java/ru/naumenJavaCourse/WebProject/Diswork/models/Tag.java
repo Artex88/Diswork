@@ -1,6 +1,7 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -16,11 +17,13 @@ public class Tag {
 
     @Column(name = "name")
     @NotNull
+    @NotEmpty
     @Size(min = 1, message = "Название тэга не должно быть пустым")
     private String tagName;
 
     @Column(name = "description")
     @NotNull
+    @NotEmpty
     private String description;
     @ManyToMany(mappedBy = "tags")
     private List<Media> mediaList;
