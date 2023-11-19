@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Diswork</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/createType/}" th:object="${type}">
+
+    <label for="typeName">Название типа произведения: </label>
+    <input type="text" th:field="*{typeName}" id="typeName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}">Name Error</div>
+    <br/>
+    <label for="description">Описание типа произведения: </label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+    <br/>
+    <input type="submit" value="Создать тип!"/>
+    <a href="/admin/adminPage/">Вернуться на главную</a>
+</form>
+</body>
+</html>

@@ -11,11 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
 import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.TagService;
+import ru.naumenJavaCourse.WebProject.Diswork.services.TypeService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
 import ru.naumenJavaCourse.WebProject.Diswork.util.MediaValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TagValidator;
+import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 
 @Controller
 public class AdminController {
@@ -24,25 +27,46 @@ public class AdminController {
 
     private final MediaService mediaService;
 
+    private final MediaValidator mediaValidator;
+
     private final TagService tagService;
 
     private final TagValidator tagValidator;
 
-    private final MediaValidator mediaValidator;
+    private final TypeService typeService;
+
+    private final TypeValidator typeValidator;
     @Autowired
-    public AdminController(HttpServletRequest request, UserService userService, MediaService mediaService, TagService tagService, TagValidator tagValidator, MediaValidator mediaValidator) {
+    public AdminController(HttpServletRequest request, UserService userService, MediaService mediaService, TagService tagService, TagValidator tagValidator, MediaValidator mediaValidator, TypeService typeService, TypeValidator typeValidator) {
         this.request = request;
         this.userService = userService;
         this.mediaService = mediaService;
         this.tagService = tagService;
         this.tagValidator = tagValidator;
         this.mediaValidator = mediaValidator;
+        this.typeService = typeService;
+        this.typeValidator = typeValidator;
     }
 
     @GetMapping("/admin/adminPage/")
     public ModelAndView showAdminPage(){
         int id = (int) request.getSession().getAttribute("id");
         return new ModelAndView("/admin/adminPage", "user", userService.findById((id)));
+    }
+
+    @GetMapping("/admin/newType/")
+    public String newType(@ModelAttribute("type") Type type){
+        return "admin/createType";
+    }
+
+    @PostMapping("/admin/createType/")
+    public String createTag(@ModelAttribute("type") @Valid Type type, BindingResult bindingResult){
+        typeValidator.validate(type,bindingResult);
+        if (bindingResult.hasErrors())
+            return "admin/createType";
+
+        typeService.save(type);
+        return "redirect:/admin/adminPage/";
     }
 
     @GetMapping("/admin/newTag/")
@@ -60,9 +84,10 @@ public class AdminController {
         return "redirect:/admin/adminPage/";
     }
 
-    @GetMapping("/admin/newMedia")
+    @GetMapping("/admin/newMedia/")
     public String newMedia(@ModelAttribute("media") Media media, Model model){
         model.addAttribute("tagList", tagService.getAll());
+        model.addAttribute("typeList", typeService.getAll());
         return "admin/createMedia";
     }
 

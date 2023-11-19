@@ -23,10 +23,6 @@ public class Media {
     @NotNull
     @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
-    @Column(name = "type")
-    @NotNull
-    @NotEmpty(message = "Тип произведения не должен быть пустым")
-    private String type;
 
     @Column(name = "poster_link")
     private String posterLink;
@@ -50,7 +46,20 @@ public class Media {
     )
     private List<Tag> tags;
 
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @NotNull
+    private Type type;
+
     public Media() {
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public String getPosterLink() {
@@ -83,14 +92,6 @@ public class Media {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getAge_rating() {
