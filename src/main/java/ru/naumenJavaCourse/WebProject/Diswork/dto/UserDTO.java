@@ -1,6 +1,9 @@
 package ru.naumenJavaCourse.WebProject.Diswork.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 
@@ -12,7 +15,21 @@ public class UserDTO {
     @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 18 символов длиной")
     private String password;
 
+    @Column(name = "email")
+    @NotEmpty(message = "Почта не может быть пустой")
+    @NotNull()
+    @Email
+    private String email;
+
     public UserDTO() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
