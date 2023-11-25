@@ -1,6 +1,7 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,13 +30,20 @@ public class Media {
     @Column(name = "age_rating")
     @NotNull
     @NotEmpty(message = "Возрастной рейтинг не должен быть пустым")
-    private String age_rating;
+    private String ageRating;
     @Column(name = "duration")
     @NotNull
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
     private int duration;
     @Column(name = "episode_count")
     @NotNull
-    private int episode_count;
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
+    private int episodeСount;
+
+    @Column(name = "year_of_release")
+    @NotNull
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
+    private int yearOfRelease;
 
     @ManyToMany
     @NotNull
@@ -51,7 +59,19 @@ public class Media {
     @NotNull
     private Type type;
 
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    private Status status;
+
     public Media() {
+    }
+
+    public int getYearOfRelease() {
+        return yearOfRelease;
+    }
+
+    public void setYearOfRelease(int yearOfRelease) {
+        this.yearOfRelease = yearOfRelease;
     }
 
     public Type getType() {
@@ -64,6 +84,14 @@ public class Media {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setPosterPath(String posterPath) {
@@ -94,12 +122,20 @@ public class Media {
         this.description = description;
     }
 
-    public String getAge_rating() {
-        return age_rating;
+    public String getAgeRating() {
+        return ageRating;
     }
 
-    public void setAge_rating(String age_rating) {
-        this.age_rating = age_rating;
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public int getEpisodeСount() {
+        return episodeСount;
+    }
+
+    public void setEpisodeСount(int episodeСount) {
+        this.episodeСount = episodeСount;
     }
 
     public int getDuration() {
@@ -110,13 +146,7 @@ public class Media {
         this.duration = duration;
     }
 
-    public int getEpisode_count() {
-        return episode_count;
-    }
 
-    public void setEpisode_count(int episode_count) {
-        this.episode_count = episode_count;
-    }
 
     public List<Tag> getTags() {
         return tags;

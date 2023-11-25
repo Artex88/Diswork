@@ -19,6 +19,17 @@
     </select>
     <br/>
 
+    <label for="status">Статус произведения: </label>
+    <select id="status" th:object="${media}" th:field="*{status}">
+        <option th:each="oneStatus: ${statusList}"  th:value="${oneStatus.getId()}" th:text="${oneStatus.getStatusName()}"></option>
+    </select>
+    <br/>
+
+    <label for="year_of_Release">Дата : </label>
+    <input type="text" th:field="*{yearOfRelease}" id="year_of_Release"/>
+    <div style="color:red" th:if="${#fields.hasErrors('yearOfRelease')}" th:errors="*{yearOfRelease}">Year Error</div>
+    <br/>
+
     <label for="description">Краткое описание произведения: </label>
     <input type="text" th:field="*{description}" id="description"/>
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
@@ -30,8 +41,8 @@
     <br/>
 
     <label for="age_rating">Возрастное ограничение: </label>
-    <input type="text" th:field="*{age_rating}" id="age_rating"/>
-    <div style="color:red" th:if="${#fields.hasErrors('age_rating')}" th:errors="*{age_rating}">Age_rating Error</div>
+    <input type="text" th:field="*{ageRating}" id="age_rating"/>
+    <div style="color:red" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}">Age_rating Error</div>
     <br/>
 
     <label for="duration">Длительность(если фильм); Указывать в минутах: </label>
@@ -40,8 +51,8 @@
     <br/>
 
     <label for="episode_count">Количество серий в сезоне(если сериал): </label>
-    <input type="text" th:field="*{episode_count}" id="episode_count"/>
-    <div style="color:red" th:if="${#fields.hasErrors('episode_count')}" th:errors="*{episode_count}">Episode_count Error</div>
+    <input type="text" th:field="*{episodeСount}" id="episode_count"/>
+    <div style="color:red" th:if="${#fields.hasErrors('episodeСount')}" th:errors="*{episodeСount}">Episode_count Error</div>
     <br/>
 
     <label for="tags">Тэги: </label>

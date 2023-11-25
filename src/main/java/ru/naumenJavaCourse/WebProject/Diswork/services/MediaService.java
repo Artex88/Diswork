@@ -29,7 +29,7 @@ public class MediaService {
     }
     @Transactional
     public void save(Media media, MultipartFile imageFile){
-        String absolutePathFolder = "src/main/resources/static/image/";
+        String absolutePathFolder = "src/main/webapp/resources/static/images/";
         String imageFolder = "/images/";
         String format = ".png";
         try {

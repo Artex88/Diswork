@@ -5,7 +5,7 @@
     <title>Diswork</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/admin/createTag/}" th:object="${tag}">
+<form th:method="POST" th:action="@{/admin/createTag}" th:object="${tag}">
 
     <label for="tagName">Название тэга: </label>
     <input type="text" th:field="*{tagName}" id="tagName"/>
