@@ -29,13 +29,14 @@ public class MediaService {
     }
     @Transactional
     public void save(Media media, MultipartFile imageFile){
-        String folder = "src/main/resources/posters/";
+        String absolutePathFolder = "src/main/resources/static/image/";
+        String imageFolder = "/images/";
+        String format = ".png";
         try {
             // TODO Вынести это в отдельный метод
-            byte[]  bytes = imageFile.getBytes();
-            var path = Paths.get(folder + media.getMediaName() + ".png");
-            media.setPosterLink(path.toString());
-            Files.write(path,bytes);
+            var path = Paths.get(absolutePathFolder + media.getMediaName() + format);
+            Files.write(path,imageFile.getBytes());
+            media.setPosterPath(imageFolder + media.getMediaName() + format);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

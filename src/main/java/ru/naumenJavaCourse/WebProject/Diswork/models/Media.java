@@ -24,8 +24,8 @@ public class Media {
     @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
 
-    @Column(name = "poster_link")
-    private String posterLink;
+    @Column(name = "poster")
+    private String posterPath;
     @Column(name = "age_rating")
     @NotNull
     @NotEmpty(message = "Возрастной рейтинг не должен быть пустым")
@@ -62,12 +62,12 @@ public class Media {
         this.type = type;
     }
 
-    public String getPosterLink() {
-        return posterLink;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPosterLink(String posterLink) {
-        this.posterLink = posterLink;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public int getId() {

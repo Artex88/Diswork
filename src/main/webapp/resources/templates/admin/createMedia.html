@@ -26,7 +26,7 @@
 
     <label for ="image"> Постер фильма</label>
     <input type="file" name = "imageFile" id="image">
-    <div style="color:red" th:if="${#fields.hasErrors('posterLink')}" th:errors="*{posterLink}">Description Error</div>
+    <div style="color:red" th:if="${#fields.hasErrors('posterPath')}" th:errors="*{posterPath}">Description Error</div>
     <br/>
 
     <label for="age_rating">Возрастное ограничение: </label>
@@ -52,7 +52,7 @@
     <br>
     <br>
     <br>
-    <a href="/admin/adminPage/">Вернуться на главную</a>
+    <a href="/admin/adminPage">Вернуться на главную</a>
 </form>
 
 </body>

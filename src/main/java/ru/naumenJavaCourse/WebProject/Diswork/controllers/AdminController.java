@@ -48,43 +48,43 @@ public class AdminController {
         this.typeValidator = typeValidator;
     }
 
-    @GetMapping("/admin/adminPage/")
+    @GetMapping("/admin/adminPage")
     public ModelAndView showAdminPage(){
         int id = (int) request.getSession().getAttribute("id");
         return new ModelAndView("/admin/adminPage", "user", userService.findById((id)));
     }
 
-    @GetMapping("/admin/newType/")
+    @GetMapping("/admin/newType")
     public String newType(@ModelAttribute("type") Type type){
         return "admin/createType";
     }
 
-    @PostMapping("/admin/createType/")
+    @PostMapping("/admin/createType")
     public String createTag(@ModelAttribute("type") @Valid Type type, BindingResult bindingResult){
         typeValidator.validate(type,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createType";
 
         typeService.save(type);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newTag/")
+    @GetMapping("/admin/newTag")
     public String newTag(@ModelAttribute("tag") Tag tag){
         return "admin/createTag";
     }
 
-    @PostMapping("/admin/createTag/")
+    @PostMapping("/admin/createTag")
     public String createTag(@ModelAttribute("tag") @Valid Tag tag, BindingResult bindingResult){
         tagValidator.validate(tag,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createTag";
 
         tagService.save(tag);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newMedia/")
+    @GetMapping("/admin/newMedia")
     public String newMedia(@ModelAttribute("media") Media media, Model model){
         model.addAttribute("tagList", tagService.getAll());
         model.addAttribute("typeList", typeService.getAll());
@@ -98,6 +98,6 @@ public class AdminController {
             return "admin/createMedia";
 
         mediaService.save(media, imageFile);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 }

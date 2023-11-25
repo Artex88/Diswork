@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
 
 @Controller
-@RequestMapping("/index")
+@RequestMapping()
 public class IndexController {
 
     private final MediaService mediaService;
@@ -19,9 +19,9 @@ public class IndexController {
     }
 
 
-    @GetMapping()
+    @GetMapping("/index")
     public String index(Model model){
         model.addAttribute("medias", mediaService.getAll());
-        return "index";
+        return "public/index";
     }
 }
