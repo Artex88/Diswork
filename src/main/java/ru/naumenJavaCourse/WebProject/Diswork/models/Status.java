@@ -18,7 +18,7 @@ public class Status {
     @Column(name = "status_name")
     @NotNull
     @NotEmpty
-    @Size(min = 1, message = "Название статуса не должно быть пустым")
+    @Size(min = 1, max = 32, message = "Название статуса не должно быть пустым и больше 32 символов")
     private String statusName;
 
     @OneToMany(mappedBy = "status")

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -17,10 +18,10 @@ public class User {
     private int id;
     @NotEmpty(message = "Имя не должно быть пустым")
     @NotNull
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 30 символов длиной")
+    @Size(min = 5, max = 32, message = "Имя должно быть от 5 до 32 символов длиной")
     @Column(name = "username")
     private String username;
-    @NotEmpty(message = "Пароль не должнем быть пустым")
+    @NotEmpty(message = "Пароль не должен быть пустым")
     @NotNull
     @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 18 символов длиной")
     @Column(name = "password")
@@ -40,7 +41,23 @@ public class User {
     @Email
     private String email;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_media",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "media_id")
+    )
+    private List<Media> mediaList;
+
     public User() {
+    }
+
+    public List<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<Media> mediaList) {
+        this.mediaList = mediaList;
     }
 
     public String getEmail() {

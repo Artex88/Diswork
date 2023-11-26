@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<p  th:text="${media.mediaName}"></p>
+<img  th:src="${media.posterPath}" width="230px" height="320px" alt="Постер">
+<p  th:text="'Тип: ' + ${media.type.typeName}"></p>
+<p  th:text="'Количество эпизодов: ' + ${media.episodeCount}"></p>
+<p  th:text="'Длительность эпизода: ' + ${media.duration} + ' минут'"></p>
+<p  th:text="'Статус: ' + ${media.status.statusName}"></p>
+<p  th:text="'Рейтинг: ' + ${media.ageRating}"></p>
+<p  th:text="'ОПИСАНИЕ ' + ${media.description}"></p>
+<p>Тэги:</p>
+<tr th:each="tag: ${media.tags}">
+    <p th:text="${tag.tagName}"></p>
+</body>
+</html>

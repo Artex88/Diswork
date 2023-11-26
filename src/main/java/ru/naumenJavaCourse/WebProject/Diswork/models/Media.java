@@ -18,18 +18,18 @@ public class Media {
     private int id;
     @Column(name = "name")
     @NotNull
-    @NotEmpty( message = "Название не должно быть пустым")
+    @Size(min = 1, max = 32, message = "Название произведения не должно быть пустым и больше 32 символов")
     private String mediaName;
     @Column(name = "description")
     @NotNull
-    @NotEmpty(message = "Описание не должно быть пустым")
+    @Size(max = 512, message = "Описанин произведения не должно превышать 512 символов")
     private String description;
 
     @Column(name = "poster")
     private String posterPath;
     @Column(name = "age_rating")
     @NotNull
-    @NotEmpty(message = "Возрастной рейтинг не должен быть пустым")
+    @Size(min = 1, message = "Возрастной рейтинг не должнен быть пустым и больше 8 символов")
     private String ageRating;
     @Column(name = "duration")
     @NotNull
@@ -38,7 +38,7 @@ public class Media {
     @Column(name = "episode_count")
     @NotNull
     @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
-    private int episodeСount;
+    private int episodeCount;
 
     @Column(name = "year_of_release")
     @NotNull
@@ -54,6 +54,9 @@ public class Media {
     )
     private List<Tag> tags;
 
+    @ManyToMany(mappedBy = "mediaList")
+    private List<User> userList;
+
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @NotNull
@@ -64,6 +67,14 @@ public class Media {
     private Status status;
 
     public Media() {
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 
     public int getYearOfRelease() {
@@ -130,12 +141,12 @@ public class Media {
         this.ageRating = ageRating;
     }
 
-    public int getEpisodeСount() {
-        return episodeСount;
+    public int getEpisodeCount() {
+        return episodeCount;
     }
 
-    public void setEpisodeСount(int episodeСount) {
-        this.episodeСount = episodeСount;
+    public void setEpisodeCount(int episodeCount) {
+        this.episodeCount = episodeCount;
     }
 
     public int getDuration() {

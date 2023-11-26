@@ -55,4 +55,9 @@ public class MediaService {
         return mediaRepository.findAll();
     }
 
+    @Transactional
+    public Media findById(int id){
+        return mediaRepository.findById(id).get();
+    }
+
 }

@@ -18,12 +18,13 @@ public class Tag {
     @Column(name = "name")
     @NotNull
     @NotEmpty
-    @Size(min = 1, message = "Название тэга не должно быть пустым")
+    @Size(min = 1, max = 32, message = "Название тэга не должно быть пустым и больше 32 символов")
     private String tagName;
 
     @Column(name = "description")
     @NotNull
     @NotEmpty
+    @Size(max = 255, message = "Описание не может быть длинее 255 символов")
     private String description;
     @ManyToMany(mappedBy = "tags")
     private List<Media> mediaList;

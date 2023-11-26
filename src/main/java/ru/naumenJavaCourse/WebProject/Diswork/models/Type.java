@@ -18,12 +18,13 @@ public class Type {
     @Column(name = "type_name")
     @NotNull
     @NotEmpty
-    @Size(min = 1, message = "Название тэга не должно быть пустым")
+    @Size(min = 1, max = 32, message = "Название тэга не должно быть пустым и больше 32 символов")
     private String typeName;
 
     @Column(name = "type_description")
     @NotNull
     @NotEmpty
+    @Size(max = 255, message = "Описание не может быть длинее 255 символов")
     private String description;
 
     @OneToMany(mappedBy = "type")
