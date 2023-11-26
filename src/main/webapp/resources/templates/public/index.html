@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <tr th:each="media : ${medias}">
+        <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
+        <a th:text="${media.mediaName}" th:href="@{/index/media/{id}(id = ${media.id})}"></a>
+        <p th:text="${media.getType().typeName}"}></p>
+        <p th:text="${media.getYearOfRelease()}"}></p>
+    </tr>
+</body>
+</html>

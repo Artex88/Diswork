@@ -5,7 +5,7 @@
     <title>Diswork</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/admin/createTag/}" th:object="${tag}">
+<form th:method="POST" th:action="@{/admin/createTag}" th:object="${tag}">
 
     <label for="tagName">Название тэга: </label>
     <input type="text" th:field="*{tagName}" id="tagName"/>
@@ -16,7 +16,7 @@
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
     <br/>
     <input type="submit" value="Создать тэг!"/>
-    <a href="/admin/adminPage/">Вернуться на главную</a>
+    <a href="/admin/adminPage">Вернуться на главную</a>
 </form>
 </body>
 </html>

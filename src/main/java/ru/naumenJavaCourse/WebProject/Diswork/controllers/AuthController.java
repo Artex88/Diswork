@@ -59,8 +59,8 @@ public class AuthController {
         int id = userService.findByUsername(request.getRemoteUser()).getId();
         request.getSession().setAttribute("id", id);
         if (request.isUserInRole("ADMIN"))
-            return "redirect:/admin/adminPage/";
+            return "redirect:/admin/adminPage";
         else
-            return "redirect:/user/userPage/";
+            return "redirect:/user/userPage";
     }
 }

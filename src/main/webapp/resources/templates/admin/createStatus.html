@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Diswork</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/createStatus}" th:object="${status}">
+
+    <label for="typeName">Название статуса: </label>
+    <input type="text" th:field="*{statusName}" id="typeName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('statusName')}" th:errors="*{statusName}">Name Error</div>
+    <br/>
+    <input type="submit" value="Создать статус!"/>
+    <a href="/admin/adminPage">Вернуться на главную</a>
+</form>
+</body>
+</html>

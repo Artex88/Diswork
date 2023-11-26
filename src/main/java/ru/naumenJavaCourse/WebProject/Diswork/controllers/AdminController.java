@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
-import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
-import ru.naumenJavaCourse.WebProject.Diswork.services.TagService;
-import ru.naumenJavaCourse.WebProject.Diswork.services.TypeService;
-import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
+import ru.naumenJavaCourse.WebProject.Diswork.services.*;
 import ru.naumenJavaCourse.WebProject.Diswork.util.MediaValidator;
+import ru.naumenJavaCourse.WebProject.Diswork.util.StatusValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TagValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 
@@ -24,6 +23,10 @@ import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 public class AdminController {
     private final HttpServletRequest request;
     private final UserService userService;
+
+    private final StatusService statusService;
+
+    private final StatusValidator statusValidator;
 
     private final MediaService mediaService;
 
@@ -37,9 +40,11 @@ public class AdminController {
 
     private final TypeValidator typeValidator;
     @Autowired
-    public AdminController(HttpServletRequest request, UserService userService, MediaService mediaService, TagService tagService, TagValidator tagValidator, MediaValidator mediaValidator, TypeService typeService, TypeValidator typeValidator) {
+    public AdminController(HttpServletRequest request, UserService userService, StatusService statusService, StatusValidator statusValidator, MediaService mediaService, TagService tagService, TagValidator tagValidator, MediaValidator mediaValidator, TypeService typeService, TypeValidator typeValidator) {
         this.request = request;
         this.userService = userService;
+        this.statusService = statusService;
+        this.statusValidator = statusValidator;
         this.mediaService = mediaService;
         this.tagService = tagService;
         this.tagValidator = tagValidator;
@@ -48,46 +53,62 @@ public class AdminController {
         this.typeValidator = typeValidator;
     }
 
-    @GetMapping("/admin/adminPage/")
+    @GetMapping("/admin/adminPage")
     public ModelAndView showAdminPage(){
         int id = (int) request.getSession().getAttribute("id");
         return new ModelAndView("/admin/adminPage", "user", userService.findById((id)));
     }
 
-    @GetMapping("/admin/newType/")
+    @GetMapping("/admin/newType")
     public String newType(@ModelAttribute("type") Type type){
         return "admin/createType";
     }
 
-    @PostMapping("/admin/createType/")
+    @PostMapping("/admin/createType")
     public String createTag(@ModelAttribute("type") @Valid Type type, BindingResult bindingResult){
         typeValidator.validate(type,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createType";
 
         typeService.save(type);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newTag/")
+    @GetMapping("/admin/newTag")
     public String newTag(@ModelAttribute("tag") Tag tag){
         return "admin/createTag";
     }
 
-    @PostMapping("/admin/createTag/")
+    @PostMapping("/admin/createTag")
     public String createTag(@ModelAttribute("tag") @Valid Tag tag, BindingResult bindingResult){
         tagValidator.validate(tag,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createTag";
 
         tagService.save(tag);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newMedia/")
+    @GetMapping("/admin/newStatus")
+    public String newStatus(@ModelAttribute("status") Status status){
+        return "admin/createStatus";
+    }
+
+    @PostMapping("/admin/createStatus")
+    public String createTag(@ModelAttribute("status") @Valid Status status, BindingResult bindingResult){
+        statusValidator.validate(status,bindingResult);
+        if (bindingResult.hasErrors())
+            return "admin/createStatus";
+
+        statusService.save(status);
+        return "redirect:/admin/adminPage";
+    }
+
+    @GetMapping("/admin/newMedia")
     public String newMedia(@ModelAttribute("media") Media media, Model model){
         model.addAttribute("tagList", tagService.getAll());
         model.addAttribute("typeList", typeService.getAll());
+        model.addAttribute("statusList", statusService.getAll());
         return "admin/createMedia";
     }
 
@@ -98,6 +119,6 @@ public class AdminController {
             return "admin/createMedia";
 
         mediaService.save(media, imageFile);
-        return "redirect:/admin/adminPage/";
+        return "redirect:/admin/adminPage";
     }
 }

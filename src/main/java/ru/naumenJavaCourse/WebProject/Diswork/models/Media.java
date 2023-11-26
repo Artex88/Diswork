@@ -1,6 +1,7 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,25 +18,32 @@ public class Media {
     private int id;
     @Column(name = "name")
     @NotNull
-    @NotEmpty( message = "Название не должно быть пустым")
+    @Size(min = 1, max = 32, message = "Название произведения не должно быть пустым и больше 32 символов")
     private String mediaName;
     @Column(name = "description")
     @NotNull
-    @NotEmpty(message = "Описание не должно быть пустым")
+    @Size(max = 512, message = "Описанин произведения не должно превышать 512 символов")
     private String description;
 
-    @Column(name = "poster_link")
-    private String posterLink;
+    @Column(name = "poster")
+    private String posterPath;
     @Column(name = "age_rating")
     @NotNull
-    @NotEmpty(message = "Возрастной рейтинг не должен быть пустым")
-    private String age_rating;
+    @Size(min = 1, message = "Возрастной рейтинг не должнен быть пустым и больше 8 символов")
+    private String ageRating;
     @Column(name = "duration")
     @NotNull
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
     private int duration;
     @Column(name = "episode_count")
     @NotNull
-    private int episode_count;
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
+    private int episodeCount;
+
+    @Column(name = "year_of_release")
+    @NotNull
+    @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
+    private int yearOfRelease;
 
     @ManyToMany
     @NotNull
@@ -46,12 +54,35 @@ public class Media {
     )
     private List<Tag> tags;
 
+    @ManyToMany(mappedBy = "mediaList")
+    private List<User> userList;
+
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @NotNull
     private Type type;
 
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    private Status status;
+
     public Media() {
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public int getYearOfRelease() {
+        return yearOfRelease;
+    }
+
+    public void setYearOfRelease(int yearOfRelease) {
+        this.yearOfRelease = yearOfRelease;
     }
 
     public Type getType() {
@@ -62,12 +93,20 @@ public class Media {
         this.type = type;
     }
 
-    public String getPosterLink() {
-        return posterLink;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPosterLink(String posterLink) {
-        this.posterLink = posterLink;
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public int getId() {
@@ -94,12 +133,20 @@ public class Media {
         this.description = description;
     }
 
-    public String getAge_rating() {
-        return age_rating;
+    public String getAgeRating() {
+        return ageRating;
     }
 
-    public void setAge_rating(String age_rating) {
-        this.age_rating = age_rating;
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public int getEpisodeCount() {
+        return episodeCount;
+    }
+
+    public void setEpisodeCount(int episodeCount) {
+        this.episodeCount = episodeCount;
     }
 
     public int getDuration() {
@@ -110,13 +157,7 @@ public class Media {
         this.duration = duration;
     }
 
-    public int getEpisode_count() {
-        return episode_count;
-    }
 
-    public void setEpisode_count(int episode_count) {
-        this.episode_count = episode_count;
-    }
 
     public List<Tag> getTags() {
         return tags;

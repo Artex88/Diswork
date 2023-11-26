@@ -1,10 +1,13 @@
 package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,22 +17,55 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty(message = "Имя не должно быть пустым")
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 30 символов длиной")
+    @NotNull
+    @Size(min = 5, max = 32, message = "Имя должно быть от 5 до 32 символов длиной")
     @Column(name = "username")
     private String username;
-    @NotEmpty(message = "Пароль не должнем быть пустым")
+    @NotEmpty(message = "Пароль не должен быть пустым")
+    @NotNull
     @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 18 символов длиной")
     @Column(name = "password")
     private String password;
     @Column(name = "role")
     @NotEmpty
+    @NotNull
     private String role;
     @Column(name = "created_at")
     private LocalDateTime created_at;
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
+    @Column(name = "email")
+    @NotEmpty(message = "Почта не может быть пустой")
+    @NotNull()
+    @Email
+    private String email;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_media",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "media_id")
+    )
+    private List<Media> mediaList;
+
     public User() {
+    }
+
+    public List<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<Media> mediaList) {
+        this.mediaList = mediaList;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getId() {
