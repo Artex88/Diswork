@@ -2,12 +2,11 @@ package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.sql.Time;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "media")
@@ -52,10 +51,9 @@ public class Media {
             joinColumns = @JoinColumn(name = "media_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
-    @ManyToMany(mappedBy = "mediaList")
-    private List<User> userList;
+
 
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
@@ -66,16 +64,26 @@ public class Media {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
+//    @ManyToMany(mappedBy = "mediaList")
+//    private Set<User> userList;
+
+    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL)
+    private Set<UserMedia> mediaUser = new HashSet<>();
+
     public Media() {
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
+//    public Set<User> getUserList() {
+//        return userList;
+//    }
+//
+//    public void setUserList(Set<User> userList) {
+//        this.userList = userList;
+//    }
 
     public int getYearOfRelease() {
         return yearOfRelease;
@@ -157,13 +165,15 @@ public class Media {
         this.duration = duration;
     }
 
-
-
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public Set<UserMedia> getMediaUser() {
+        return mediaUser;
+    }
+
+    public void setMediaUser(Set<UserMedia> ratings) {
+        this.mediaUser = ratings;
     }
 }

@@ -7,7 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -41,24 +42,35 @@ public class User {
     @Email
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_media",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "media_id")
-    )
-    private List<Media> mediaList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_media",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "media_id")
+//    )
+//    private Set<Media> mediaList;
+
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    private Set<UserMedia> userMedia = new HashSet<>();
 
     public User() {
     }
 
-    public List<Media> getMediaList() {
-        return mediaList;
+    public Set<UserMedia> getUserMedia() {
+        return userMedia;
     }
 
-    public void setMediaList(List<Media> mediaList) {
-        this.mediaList = mediaList;
+    public void setUserMedia(Set<UserMedia> ratings) {
+        this.userMedia = ratings;
     }
+
+//    public Set<Media> getMediaList() {
+//        return mediaList;
+//    }
+//
+//    public void setMediaList(Set<Media> mediaList) {
+//        this.mediaList = mediaList;
+//    }
 
     public String getEmail() {
         return email;

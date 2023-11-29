@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.naumenJavaCourse.WebProject.Diswork.dto.GradingDTO;
 import ru.naumenJavaCourse.WebProject.Diswork.dto.MediaJsonDto;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
 
@@ -40,5 +40,13 @@ public class JsController {
         String response = userService.deleteMediaFromList(userId, Integer.parseInt(mediaJsonDto.getId()));
         data.put("message", response);
         return data;
+    }
+    @PreAuthorize("isAuthenticated()")
+    @Secured("ROLE_USER")
+    @PostMapping("/index/media/assessment")
+    public Map<String, String> assessmentMedia(@RequestBody GradingDTO gradingDTO, HttpServletRequest request){
+        Map<String, String> data = new HashMap<>();
+        int userId = (int) request.getSession().getAttribute("id");
+        return null;
     }
 }
