@@ -18,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/userPage/")
+    @GetMapping("/user/userPage")
     public ModelAndView showUserPage()
     {
         int id = (int) request.getSession().getAttribute("id");

@@ -14,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("/resources/static/images/")
+        registry.addResourceHandler("/resources/**")
+                .addResourceLocations("/resources/")
                 .setCacheControl(CacheControl.maxAge(Duration.ofDays(180)).cachePublic());
     }
 }
