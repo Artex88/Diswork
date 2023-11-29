@@ -34,8 +34,7 @@
 <script th:inline="javascript">
     const deleteButton = document.getElementById('deleteButton');
     const addButton = document.getElementById('addButton');
-    const isAddButtonHidden = localStorage.getItem('isAddDeleteHidden');
-    let message="";
+    const isAddButtonHidden = localStorage.getItem('isAddButtonHidden');
 
     if (isAddButtonHidden === 'true'){
         addButton.style.display='none';
@@ -57,7 +56,7 @@
          if (message === "Произведение удалено из избранного"){
         addButton.style.display='block';
         deleteButton.style.display='none';
-             localStorage.setItem('isAddButtonHidden', 'false');
+        localStorage.setItem('isAddButtonHidden', 'false');
          }
 
     }

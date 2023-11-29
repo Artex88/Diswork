@@ -7,6 +7,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,6 +41,12 @@ public class UserService {
             userRepository.save(user);
             return "Произведение добавленно";
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Media> showUserMedia(int userId){
+        User user = this.findById(userId);
+        return user.getMediaList();
     }
 
     @Transactional
