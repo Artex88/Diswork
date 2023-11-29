@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.naumenJavaCourse.WebProject.Diswork.dto.GradingDTO;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
 import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
@@ -37,7 +38,9 @@ public class IndexController {
     }
 
     @GetMapping("/media/{id}")
-    public ModelAndView displayMedia(@PathVariable int id){
-        return new ModelAndView("public/mediaDisplay", "media", mediaService.findById(id));
+    public String displayMedia(@PathVariable int id, Model model){
+        model.addAttribute("media", mediaService.findById(id));
+        model.addAttribute("grading", new GradingDTO());
+        return "public/mediaDisplay";
     }
 }

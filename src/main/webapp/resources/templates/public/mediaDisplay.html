@@ -10,12 +10,16 @@
         #deleteButton{
             display: none;
         }
+        #gradingForm{
+            display: none;
+        }
     </style>
     <link href="/resources/css/toastr.css" rel="stylesheet"/>
 </head>
 <body>
 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-<p  th:text="${media.mediaName}"></p>
+<section>
+<h1  th:text="${media.mediaName}"></h1>
 <img  th:src="${media.posterPath}" width="230px" height="320px" alt="Постер">
 <p  th:text="'Тип: ' + ${media.type.typeName}"></p>
 <p  th:text="'Количество эпизодов: ' + ${media.episodeCount}"></p>
@@ -27,36 +31,52 @@
 </tr>
 <p  th:text="'Возрастной рейтинг: ' + ${media.ageRating}"></p>
 <p  th:text="'ОПИСАНИЕ: ' + ${media.description}"></p>
-
+</section>
+<section>
 <td><button id="addButton" th:one="${media.id}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
 <td><button id="deleteButton" th:one="${media.id}" th:two="${_csrf.token}" onclick="fetchAndDeleteMedia(this.getAttribute('one'), this.getAttribute('two'))">Удалить из избранного</button></td>
 
+<form id= "gradingForm" th:method="POST" th:action="@{/index/media/assessment}" th:object="${grading}">
+    <input type="hidden" th:value="${media.id}" th:field="${grading.mediaId}" id="typeName"/>
+    <label for="valueSelect">Выберите значение:</label>
+    <select id="valueSelect" name="selectedValue">
+        <option th:each="value : ${#numbers.sequence(1, 10)}" th:value="${grading.grade}" th:text="${value}"></option>
+    </select>
+    <br>
+    <button type="submit">Оценить</button>
+</form>
+</section>
 <script th:inline="javascript">
     const deleteButton = document.getElementById('deleteButton');
     const addButton = document.getElementById('addButton');
+    const gradingForm = document.getElementById('gradingForm');
     const isAddButtonHidden = localStorage.getItem('isAddButtonHidden');
 
     if (isAddButtonHidden === 'true'){
         addButton.style.display='none';
         deleteButton.style.display='block';
+        gradingForm.style.display='block'
     }else {
         addButton.style.display='block';
         deleteButton.style.display='none';
+        gradingForm.style.display='none';
     }
 
     function handleAddButton(message){
          if (message === "Произведение добавленно"){
-        deleteButton.style.display='block';
-        addButton.style.display='none';
-        localStorage.setItem('isAddButtonHidden', 'true');
+            deleteButton.style.display='block';
+            addButton.style.display='none';
+            gradingForm.style.display='block';
+            localStorage.setItem('isAddButtonHidden', 'true');
          }
 
     }
     function handleDeleteButton(message){
          if (message === "Произведение удалено из избранного"){
-        addButton.style.display='block';
-        deleteButton.style.display='none';
-        localStorage.setItem('isAddButtonHidden', 'false');
+            addButton.style.display='block';
+            deleteButton.style.display='none';
+            gradingForm.style.display='none';
+            localStorage.setItem('isAddButtonHidden', 'false');
          }
 
     }
@@ -79,8 +99,7 @@
                 return response.json();
             })
             .then(data => {
-                message = data.message
-                handleAddButton(message)
+                handleAddButton(data.message)
                 ShowToast("success", data.message)
             })
             .catch(error => {
@@ -107,8 +126,7 @@
                 return response.json();
             })
             .then(data => {
-                message = data.message
-                handleDeleteButton(message)
+                handleDeleteButton(data.message)
                 ShowToast("success", data.message)
             })
             .catch(error => {
