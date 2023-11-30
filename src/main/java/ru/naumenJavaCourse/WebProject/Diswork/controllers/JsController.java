@@ -47,6 +47,8 @@ public class JsController {
     public Map<String, String> assessmentMedia(@RequestBody GradingDTO gradingDTO, HttpServletRequest request){
         Map<String, String> data = new HashMap<>();
         int userId = (int) request.getSession().getAttribute("id");
-        return null;
+        String response = userService.assessmentMedia(userId, Integer.parseInt(gradingDTO.getMediaId()), Integer.parseInt(gradingDTO.getGrade()));
+        data.put("message", response);
+        return data;
     }
 }

@@ -33,6 +33,14 @@ public class UserService {
         return user.orElse(null);
     }
     @Transactional(readOnly = true)
+    public User findByAttributeSessionId(Object id){
+        if (id == null)
+            return null;
+        else {
+            return this.findById((int) id);
+        }
+    }
+    @Transactional(readOnly = true)
     public User findByUsername(String username){
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
@@ -43,14 +51,22 @@ public class UserService {
         User user = this.findById(userId);
         return user.getUserMedia().stream().filter(userMedia -> userMedia.getMediaRatingKey().getUserId() == userId).map(UserMedia::getMedia).collect(Collectors.toSet());
     }
+    @Transactional(readOnly = true)
+    public boolean isMediaExistInUserList(User user, int userId, int mediaId){
+        return user.getUserMedia().stream().anyMatch(userMedia -> userMedia.getMediaRatingKey().getUserId() == userId && userMedia.getMediaRatingKey().getMediaId() == mediaId);
+    }
+    @Transactional
+        public UserMedia getCertainUserMedia(User user, int userId, int mediaId){
+        return user.getUserMedia().stream().filter(userMedia -> userMedia.getMediaRatingKey().getMediaId() == mediaId && userMedia.getMediaRatingKey().getUserId() == userId).findFirst().get();
+    }
 
     @Transactional
     public String addMediaToList(int userId, int mediaId){
         User user = this.findById(userId);
-        Media media = mediaService.findById(mediaId);
-        if (user.getUserMedia().stream().map(UserMedia::getMedia).anyMatch(media1 -> media1.equals(media)))
+        if (this.isMediaExistInUserList(user,userId,mediaId))
             return "Данное произведение уже добавленно";
         else {
+            Media media = mediaService.findById(mediaId);
             var userMedia = new UserMedia();
             userMedia.setMedia(media);
             userMedia.setUser(user);
@@ -63,12 +79,22 @@ public class UserService {
     @Transactional
     public String deleteMediaFromList(int userId, int mediaId){
         User user = this.findById(userId);
-        Media media = mediaService.findById(mediaId);
-        if (user.getUserMedia().stream().map(UserMedia::getMedia).anyMatch(media1 -> media1.equals(media))){
+        if (this.isMediaExistInUserList(user,userId,mediaId)){
+            Media media = mediaService.findById(mediaId);
             user.getUserMedia().removeIf(userMedia -> userMedia.getUser().equals(user) && userMedia.getMedia().equals(media));
             return "Произведение удалено из избранного";
         }
         else {
+            return "Произведения нету в избранном";
+        }
+    }
+    @Transactional
+    public String assessmentMedia(int userId, int mediaId, int grade){
+        User user = this.findById(userId);
+        if (this.isMediaExistInUserList(user,userId,mediaId)){
+            this.getCertainUserMedia(user, userId, mediaId).setGrade(grade);
+            return String.valueOf(grade);
+        } else {
             return "Произведения нету в избранном";
         }
     }
