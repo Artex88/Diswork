@@ -64,10 +64,7 @@ public class Media {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-//    @ManyToMany(mappedBy = "mediaList")
-//    private Set<User> userList;
-
-    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL,  orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
 
     public Media() {
@@ -76,14 +73,6 @@ public class Media {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
-
-//    public Set<User> getUserList() {
-//        return userList;
-//    }
-//
-//    public void setUserList(Set<User> userList) {
-//        this.userList = userList;
-//    }
 
     public int getYearOfRelease() {
         return yearOfRelease;

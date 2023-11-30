@@ -42,15 +42,7 @@ public class User {
     @Email
     private String email;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_media",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "media_id")
-//    )
-//    private Set<Media> mediaList;
-
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<UserMedia> userMedia = new HashSet<>();
 
     public User() {
@@ -63,14 +55,6 @@ public class User {
     public void setUserMedia(Set<UserMedia> ratings) {
         this.userMedia = ratings;
     }
-
-//    public Set<Media> getMediaList() {
-//        return mediaList;
-//    }
-//
-//    public void setMediaList(Set<Media> mediaList) {
-//        this.mediaList = mediaList;
-//    }
 
     public String getEmail() {
         return email;
