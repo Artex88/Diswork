@@ -18,10 +18,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/userPage/")
+    @GetMapping("/user/userPage")
     public ModelAndView showUserPage()
     {
         int id = (int) request.getSession().getAttribute("id");
         return new ModelAndView("/user/userPage", "user", userService.findById(id));
+    }
+    @GetMapping("/user/media")
+    public ModelAndView showUserMedia()
+    {
+        int id = (int) request.getSession().getAttribute("id");
+        return new ModelAndView("/user/userMedia", "userMediaList", userService.showUserMedia(id));
     }
 }

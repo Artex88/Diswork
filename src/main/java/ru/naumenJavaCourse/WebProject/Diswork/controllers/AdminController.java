@@ -3,6 +3,7 @@ package ru.naumenJavaCourse.WebProject.Diswork.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.util.TagValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 
 @Controller
+@Secured("ROLE_ADMIN")
 public class AdminController {
     private final HttpServletRequest request;
     private final UserService userService;

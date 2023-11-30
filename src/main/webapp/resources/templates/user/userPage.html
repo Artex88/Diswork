@@ -8,6 +8,8 @@
     <p th:text="${'Добро пожаловать в свой личный кабинет ' + user.getUsername() + ' твой id ' + user.getId()}">VALUE</p>
     <p th:text="${'Он пока слегка недоработан, но работы ведутся'}">VALUE</p>
     <br>
+    <a href="/user/media">Ваше избранное</a>
+    <a href="/index">Список всех произведений</a>
     <form th:action="@{/logout}" th:method="POST">
         <input type="submit" value="Logout">
     </form>
