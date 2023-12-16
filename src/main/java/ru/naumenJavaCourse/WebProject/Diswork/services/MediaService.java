@@ -13,6 +13,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -29,20 +31,34 @@ public class MediaService {
     }
     @Transactional
     public void save(Media media, MultipartFile imageFile){
-        String absolutePathFolder = "src/main/webapp/resources/static/images/";
-        String imageFolder = "/images/";
+        saveImage(media, imageFile);
+        media.setRating(0);
+        mediaRepository.save(media);
+    }
+
+    private void saveImage(Media media, MultipartFile imageFile) {
+        String absolutePathFolder = "src/main/webapp/resources/images/";
+        String imageFolder = "/resources/images/";
         String format = ".png";
         try {
-            // TODO Вынести это в отдельный метод
             var path = Paths.get(absolutePathFolder + media.getMediaName() + format);
-            Files.write(path,imageFile.getBytes());
+            Files.write(path, imageFile.getBytes());
             media.setPosterPath(imageFolder + media.getMediaName() + format);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-        mediaRepository.save(media);
+    }
+    @Transactional(readOnly = true)
+    public String getAvgRating(int mediaId){
+        Double sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
+        Double sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
+        double avgRating;
+        try {
+            avgRating = sumOfAllGrades / sumOfTimesWhenMediaGrated;
+        } catch (Exception e){
+            return "0";
+        }
+        return String.format("%.2f",avgRating);
     }
 
     @Transactional(readOnly = true)

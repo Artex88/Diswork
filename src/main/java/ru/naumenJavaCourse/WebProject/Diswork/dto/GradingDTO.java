@@ -1,26 +1,26 @@
 package ru.naumenJavaCourse.WebProject.Diswork.dto;
 
 public class GradingDTO {
-    private String grade;
+    private int grade;
 
-    private String mediaId;
+    private int mediaId;
 
     public GradingDTO() {
     }
 
-    public String getGrade() {
+    public int getGrade() {
         return grade;
     }
 
-    public void setGrade(String grade) {
+    public void setGrade(int grade) {
         this.grade = grade;
     }
 
-    public String getMediaId() {
+    public int getMediaId() {
         return mediaId;
     }
 
-    public void setMediaId(String mediaId) {
+    public void setMediaId(int mediaId) {
         this.mediaId = mediaId;
     }
 }
