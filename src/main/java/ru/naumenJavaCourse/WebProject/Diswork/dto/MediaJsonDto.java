@@ -1,16 +1,16 @@
 package ru.naumenJavaCourse.WebProject.Diswork.dto;
 
 public class MediaJsonDto {
-    private String id;
+    private int id;
 
     public MediaJsonDto() {
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

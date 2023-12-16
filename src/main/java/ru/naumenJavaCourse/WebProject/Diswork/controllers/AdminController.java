@@ -68,9 +68,9 @@ public class AdminController {
 
     @PostMapping("/admin/createType")
     public String createTag(@ModelAttribute("type") @Valid Type type, BindingResult bindingResult){
-        typeValidator.validate(type,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createType";
+        typeValidator.validate(type,bindingResult);
 
         typeService.save(type);
         return "redirect:/admin/adminPage";
@@ -83,9 +83,9 @@ public class AdminController {
 
     @PostMapping("/admin/createTag")
     public String createTag(@ModelAttribute("tag") @Valid Tag tag, BindingResult bindingResult){
-        tagValidator.validate(tag,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createTag";
+        tagValidator.validate(tag,bindingResult);
 
         tagService.save(tag);
         return "redirect:/admin/adminPage";
@@ -98,9 +98,9 @@ public class AdminController {
 
     @PostMapping("/admin/createStatus")
     public String createTag(@ModelAttribute("status") @Valid Status status, BindingResult bindingResult){
-        statusValidator.validate(status,bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createStatus";
+        statusValidator.validate(status,bindingResult);
 
         statusService.save(status);
         return "redirect:/admin/adminPage";
@@ -116,9 +116,9 @@ public class AdminController {
 
     @PostMapping("/admin/createMedia")
     public String createMedia(@ModelAttribute("media") @Valid Media media, @RequestPart(name = "imageFile") MultipartFile imageFile, BindingResult bindingResult){
-        mediaValidator.validate(media, bindingResult);
         if (bindingResult.hasErrors())
             return "admin/createMedia";
+        mediaValidator.validate(media, bindingResult);
 
         mediaService.save(media, imageFile);
         return "redirect:/admin/adminPage";

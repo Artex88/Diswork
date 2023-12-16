@@ -27,7 +27,7 @@ public class JsController {
     public Map<String, String> addMediaToUserList(@RequestBody MediaJsonDto mediaJsonDto, HttpServletRequest request){
         Map<String, String> data = new HashMap<>();
         int userId = (int) request.getSession().getAttribute("id");
-        String response = userService.addMediaToList(userId, Integer.parseInt(mediaJsonDto.getId()));
+        String response = userService.addMediaToList(userId, mediaJsonDto.getId());
         data.put("message", response);
         return data;
     }
@@ -37,17 +37,18 @@ public class JsController {
     public Map<String, String> deleteMediaFromUserList(@RequestBody MediaJsonDto mediaJsonDto, HttpServletRequest request){
         Map<String, String> data = new HashMap<>();
         int userId = (int) request.getSession().getAttribute("id");
-        String response = userService.deleteMediaFromList(userId, Integer.parseInt(mediaJsonDto.getId()));
+        String response = userService.deleteMediaFromList(userId, mediaJsonDto.getId());
         data.put("message", response);
         return data;
     }
+
     @PreAuthorize("isAuthenticated()")
     @Secured("ROLE_USER")
     @PostMapping("/index/media/assessment")
     public Map<String, String> assessmentMedia(@RequestBody GradingDTO gradingDTO, HttpServletRequest request){
         Map<String, String> data = new HashMap<>();
         int userId = (int) request.getSession().getAttribute("id");
-        String response = userService.assessmentMedia(userId, Integer.parseInt(gradingDTO.getMediaId()), Integer.parseInt(gradingDTO.getGrade()));
+        String response = userService.assessmentMedia(userId, gradingDTO.getMediaId(), gradingDTO.getGrade());
         data.put("message", response);
         return data;
     }

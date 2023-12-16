@@ -39,7 +39,7 @@ public class IndexController {
         if(user == null)
             model.addAttribute("isAddButtonHidden", "false");
         else {
-            if (userService.isMediaExistInUserList(user, (int) request.getSession().getAttribute("id"), mediaId)) {
+            if (userService.isMediaExistInUserList(user, mediaId)) {
                 isMediaExistInUserList = true;
                 model.addAttribute("isAddButtonHidden", "true");
             }
@@ -56,6 +56,7 @@ public class IndexController {
         model.addAttribute("grade", grade);
         model.addAttribute("media", media);
         model.addAttribute("grading", new GradingDTO());
+        model.addAttribute("avgRating", mediaService.getAvgRating(mediaId));
         return "public/mediaDisplay";
     }
 }

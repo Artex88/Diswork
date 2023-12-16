@@ -2,15 +2,21 @@ package ru.naumenJavaCourse.WebProject.Diswork.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Validated
 @Table(name = "media")
 public class Media {
+
+    private static final DecimalFormat decfor = new DecimalFormat("0.00");
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +24,7 @@ public class Media {
     @Column(name = "name")
     @NotNull
     @Size(min = 1, max = 32, message = "Название произведения не должно быть пустым и больше 32 символов")
+    @NotEmpty(message = "Название не может быть пустым")
     private String mediaName;
     @Column(name = "description")
     @NotNull
@@ -43,6 +50,10 @@ public class Media {
     @NotNull
     @Digits(integer = 4, fraction = 0, message = "Некорректно задано число ")
     private int yearOfRelease;
+
+    @Column(name = "rating")
+    @NotNull
+    private double rating;
 
     @ManyToMany
     @NotNull
@@ -164,5 +175,13 @@ public class Media {
 
     public void setMediaUser(Set<UserMedia> ratings) {
         this.mediaUser = ratings;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

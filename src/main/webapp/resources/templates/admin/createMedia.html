@@ -17,15 +17,17 @@
     <select id="types" th:object="${media}" th:field="*{type}">
         <option th:each="oneType: ${typeList}"  th:value="${oneType.getId()}" th:text="${oneType.typeName}"></option>
     </select>
+    <div style="color:red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Name Error</div>
     <br/>
 
     <label for="status">Статус произведения: </label>
     <select id="status" th:object="${media}" th:field="*{status}">
         <option th:each="oneStatus: ${statusList}"  th:value="${oneStatus.getId()}" th:text="${oneStatus.getStatusName()}"></option>
     </select>
+    <div style="color:red" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Name Error</div>
     <br/>
 
-    <label for="year_of_Release">Дата : </label>
+    <label for="year_of_Release">Год : </label>
     <input type="text" th:field="*{yearOfRelease}" id="year_of_Release"/>
     <div style="color:red" th:if="${#fields.hasErrors('yearOfRelease')}" th:errors="*{yearOfRelease}">Year Error</div>
     <br/>
@@ -45,14 +47,14 @@
     <div style="color:red" th:if="${#fields.hasErrors('ageRating')}" th:errors="*{ageRating}">Age_rating Error</div>
     <br/>
 
-    <label for="duration">Длительность(если фильм); Указывать в минутах: </label>
+    <label for="duration">Длительность(если сериал, то указываем длительность серии); Указывать в минутах: </label>
     <input type="text" th:field="*{duration}" id="duration"/>
     <div style="color:red" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Time Error</div>
     <br/>
 
-    <label for="episode_count">Количество серий в сезоне(если сериал): </label>
+    <label for="episode_count">Количество серий(если фильм, указывем одну): </label>
     <input type="text" th:field="*{episodeCount}" id="episode_count"/>
-    <div style="color:red" th:if="${#fields.hasErrors('episodeСount')}" th:errors="*{episodeCount}">Episode_count Error</div>
+    <div style="color:red" th:if="${#fields.hasErrors('episodeCount')}" th:errors="*{episodeCount}">Episode_count Error</div>
     <br/>
 
     <label for="tags">Тэги: </label>
@@ -60,8 +62,6 @@
         <option th:each="oneTag: ${tagList}"  th:value="${oneTag.getId()}" th:text="${oneTag.tagName}"></option>
     </select>
     <input type="submit"  value="Создать произведение!"/>
-    <br>
-    <br>
     <br>
     <a href="/admin/adminPage">Вернуться на главную</a>
 </form>
