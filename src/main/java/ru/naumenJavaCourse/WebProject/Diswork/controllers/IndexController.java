@@ -56,7 +56,7 @@ public class IndexController {
         model.addAttribute("grade", grade);
         model.addAttribute("media", media);
         model.addAttribute("grading", new GradingDTO());
-        model.addAttribute("avgRating", mediaService.getAvgRating(mediaId));
+        model.addAttribute("avgRating", media.getRating());
         return "public/mediaDisplay";
     }
 }

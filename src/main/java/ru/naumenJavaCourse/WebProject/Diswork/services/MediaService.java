@@ -48,17 +48,31 @@ public class MediaService {
             throw new RuntimeException(e);
         }
     }
+//    @Transactional(readOnly = true)
+//    public String getAvgRating(int mediaId){
+//        Double sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
+//        Double sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
+//        double avgRating;
+//        try {
+//            avgRating = sumOfAllGrades / sumOfTimesWhenMediaGrated;
+//        } catch (Exception e){
+//            return "0";
+//        }
+//        return String.format("%.2f",avgRating);
+//    }
+
     @Transactional(readOnly = true)
-    public String getAvgRating(int mediaId){
-        Double sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
-        Double sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
-        double avgRating;
+    public void updateRating(int mediaId){
+        BigDecimal sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
+        BigDecimal sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
+        BigDecimal avgRating = null;
         try {
-            avgRating = sumOfAllGrades / sumOfTimesWhenMediaGrated;
+            avgRating = sumOfAllGrades.divide(sumOfTimesWhenMediaGrated, 2, RoundingMode.HALF_UP);
         } catch (Exception e){
-            return "0";
+            mediaRepository.updateMediaByRating(new BigDecimal(0), mediaId);
         }
-        return String.format("%.2f",avgRating);
+
+        mediaRepository.updateMediaByRating(avgRating, mediaId);
     }
 
     @Transactional(readOnly = true)

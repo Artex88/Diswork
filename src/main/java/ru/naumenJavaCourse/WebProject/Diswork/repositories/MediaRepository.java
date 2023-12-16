@@ -18,12 +18,12 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
     Optional<Media> findById(int id);
 
     @Query("select sum(um.grade) from Media join UserMedia um on um.mediaRatingKey.mediaId = :id ")
-    Double getTotalNumberOfRatingPointsRating(@Param("id") int id);
+    BigDecimal getTotalNumberOfRatingPointsRating(@Param("id") int id);
 
     @Query("select count(*) from Media join UserMedia um on um.mediaRatingKey.mediaId = :id where um.grade != 0")
-    Double getNumberOfTimesWhenMediaGraded(@Param("id") int id);
+    BigDecimal getNumberOfTimesWhenMediaGraded(@Param("id") int id);
 
     @Modifying
-    @Query("update Media set rating= :rating where id=:id")
-    void updateMediaByRating(@Param("rating") double rating, @Param("id") int id);
+    @Query("update Media set rating= :rating where id= :id")
+    void updateMediaByRating(@Param("rating") BigDecimal rating, @Param("id") int id);
 }

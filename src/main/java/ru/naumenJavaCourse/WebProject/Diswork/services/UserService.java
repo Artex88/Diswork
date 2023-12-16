@@ -63,6 +63,7 @@ public class UserService {
         return user.getUserMedia().stream().anyMatch(userMedia -> {
             if (userMedia.getMediaRatingKey().getUserId() == userId && userMedia.getMediaRatingKey().getMediaId() == mediaId){
                 userMedia.setGrade(grade);
+                mediaService.updateRating(mediaId);
                 return true;
             }
             return false;
@@ -75,6 +76,7 @@ public class UserService {
             if (userMedia.getMediaRatingKey().getUserId() == userId && userMedia.getMediaRatingKey().getMediaId() == mediaId) {
                 Media media = mediaService.findById(mediaId);
                 user.getUserMedia().removeIf(userMedia1 -> userMedia1.getUser().equals(user) && userMedia1.getMedia().equals(media));
+                mediaService.updateRating(mediaId);
                 return true;
             }
             return false;
