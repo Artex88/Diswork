@@ -11,6 +11,8 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.User;
 import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
 import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
 
+import java.util.*;
+
 @Controller
 @RequestMapping("/index")
 public class IndexController {
@@ -27,8 +29,12 @@ public class IndexController {
 
 
     @GetMapping()
-    public String index(Model model){
-        model.addAttribute("medias", mediaService.getAll());
+    public String index(Model model, @RequestParam(name = "order", required = false) String order){
+        String finalOrder = order;
+        if (order == null || !Arrays.stream(Media.class.getDeclaredFields()).filter(field -> field.getType().isPrimitive() || field.getType().equals(String.class)).anyMatch(field -> field.getName().equals(finalOrder)))
+            order = "rating";
+        List<Media> mediaList = mediaService.getAllMediaAndSort(order);
+        model.addAttribute("medias", mediaList);
         return "public/index";
     }
 

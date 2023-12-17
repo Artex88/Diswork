@@ -11,5 +11,45 @@
         <p th:text="${media.getType().typeName}"}></p>
         <p th:text="${media.getYearOfRelease()}"}></p>
     </tr>
+    <p>
+        <span><strong>СОРТИРОВКА:</strong></span>
+        <button class="sortButton" data-param="id">По id</button>
+        <button class="sortButton" data-param="mediaName">По названию</button>
+        <button class="sortButton" data-param="yearOfRelease">По году выхода</button>
+        <button class="sortButton" data-param="rating">По рейтингу</button>
+    </p>
+    <script>
+        let buttons = document.getElementsByClassName('sortButton');
+        Array.from(buttons).forEach(function(button) {
+            button.addEventListener('click', function() {
+                let currentUrl = window.location.href;
+                let param = this.getAttribute('data-param');
+                fetch(currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + 'order=' + param)
+                    .then(response => response.text())
+                    .then(data => {
+                        window.location.href = currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + 'order=' + param;
+                    })
+                    .catch(error => console.error('Ошибка:', error));
+            });
+        });
+        function removeParam(key, sourceURL) {
+            let splitUrl = sourceURL.split('?'),
+                rtn = splitUrl[0],
+                param,
+                params_arr = [],
+                queryString = (sourceURL.indexOf("?") !== -1) ? splitUrl[1] : '';
+            if (queryString !== '') {
+                params_arr = queryString.split('&');
+                for (let i = params_arr.length - 1; i >= 0; i -= 1) {
+                    param = params_arr[i].split('=')[0];
+                    if (param === key) {
+                        params_arr.splice(i, 1);
+                    }
+                }
+                rtn = rtn + '?' + params_arr.join('&');
+            }
+            return rtn
+        }
+    </script>
 </body>
 </html>

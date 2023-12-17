@@ -23,7 +23,7 @@ public class Media {
     private int id;
     @Column(name = "name")
     @NotNull
-    @Size(min = 1, max = 32, message = "Название произведения не должно быть пустым и больше 32 символов")
+    @Size(min = 1, max = 64, message = "Название произведения не должно быть пустым и больше 32 символов")
     @NotEmpty(message = "Название не может быть пустым")
     private String mediaName;
     @Column(name = "description")

@@ -19,6 +19,7 @@
 <h1  th:text="${media.mediaName}"></h1>
 <img  th:src="${media.posterPath}" width="230px" height="320px" alt="Постер">
 <p  th:text="'Тип: ' + ${media.type.typeName}"></p>
+    <p  th:text="'Год выхода: ' + ${media.yearOfRelease}"></p>
 <p  th:text="'Количество эпизодов: ' + ${media.episodeCount}"></p>
 <p  th:text="'Длительность эпизода: ' + ${media.duration} + ' минут'"></p>
 <p  th:text="'Статус: ' + ${media.status.statusName}"></p>

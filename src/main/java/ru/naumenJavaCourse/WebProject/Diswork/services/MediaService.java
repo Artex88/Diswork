@@ -4,20 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.introspector.PropertyUtils;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -48,18 +47,6 @@ public class MediaService {
             throw new RuntimeException(e);
         }
     }
-//    @Transactional(readOnly = true)
-//    public String getAvgRating(int mediaId){
-//        Double sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
-//        Double sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
-//        double avgRating;
-//        try {
-//            avgRating = sumOfAllGrades / sumOfTimesWhenMediaGrated;
-//        } catch (Exception e){
-//            return "0";
-//        }
-//        return String.format("%.2f",avgRating);
-//    }
 
     @Transactional(readOnly = true)
     public void updateRating(int mediaId){
@@ -81,13 +68,21 @@ public class MediaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Media> getAll(){
-        return mediaRepository.findAll();
+    public List<Media> getAllMediaAndSort(String orderSetting){
+        List<Media> mediaList =  mediaRepository.findAll();
+        if (Objects.equals(orderSetting, "id"))
+            mediaList.sort(Comparator.comparing(Media::getId));
+        else if(Objects.equals(orderSetting, "mediaName"))
+            mediaList.sort(Comparator.comparing(Media::getYearOfRelease));
+        else if(Objects.equals(orderSetting, "yearOfRelease"))
+            mediaList.sort(Comparator.comparing(Media::getMediaName));
+        else if(Objects.equals(orderSetting, "rating"))
+            mediaList.sort(Comparator.comparing(Media::getRating));
+        return mediaList;
     }
 
     @Transactional
     public Media findById(int id){
         return mediaRepository.findById(id).get();
     }
-
 }
