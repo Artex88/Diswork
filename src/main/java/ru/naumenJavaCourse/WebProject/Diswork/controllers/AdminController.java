@@ -127,7 +127,7 @@ public class AdminController {
         return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/allMedias")
+    @GetMapping("/allMedia")
     public String getAllMedia(Model model){
         model.addAttribute("medias", mediaService.getAll());
         return "admin/allMedia";
@@ -182,5 +182,35 @@ public class AdminController {
         return "admin/editType";
     }
 
+    @PostMapping("/media/edit/{id}")
+    public String updateMedia(@RequestPart(name = "imageFile") MultipartFile multipartFile, @PathVariable("id") int mediaId, @ModelAttribute("media") @Valid Media media, BindingResult bindingResult ){
+        if (bindingResult.hasErrors())
+            return "admin/editMedia";
+        mediaService.upload(media, mediaId, multipartFile);
+        return "redirect:/admin/allMedia";
+    }
 
+    @PostMapping("/status/edit/{id}")
+    public String updateStatus(@ModelAttribute("status") @Valid Status status, @PathVariable("id") int statusId, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            return "admin/editStatus";
+        statusService.upload(status,statusId);
+        return "redirect:/admin/allStatuses";
+    }
+
+    @PostMapping("/tag/edit/{id}")
+    public String updateTag(@ModelAttribute("tag") @Valid Tag tag, @PathVariable("id") int tagId, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            return "admin/editTag";
+        tagService.upload(tag, tagId);
+        return "redirect:/admin/allTags";
+    }
+
+    @PostMapping("/type/edit/{id}")
+    public String updateType(@ModelAttribute("type") @Valid Type type, @PathVariable("id") int typeId, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            return "admin/editType";
+        typeService.upload(type, typeId);
+        return "redirect:/admin/allTypes";
+    }
 }

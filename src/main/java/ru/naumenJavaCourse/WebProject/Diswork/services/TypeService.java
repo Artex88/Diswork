@@ -25,6 +25,12 @@ public class TypeService {
     public void save(Type type){
         typeRepository.save(type);
     }
+
+    @Transactional
+    public void upload(Type newType, int oldTypeId){
+        newType.setId(oldTypeId);
+        typeRepository.save(newType);
+    }
     @Transactional(readOnly = true)
     public Optional<Type> findByName(String name){
         return typeRepository.findByTypeName(name);

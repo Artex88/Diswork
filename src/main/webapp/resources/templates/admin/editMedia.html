@@ -5,7 +5,7 @@
     <title>Diswork</title>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/admin/media/{id}(id = ${media.getId()})}" th:object="${media}" enctype="multipart/form-data">
+<form th:method="POST" th:action="@{/admin/media/edit/{id}(id = ${media.getId()})}"  th:object="${media}" enctype="multipart/form-data">
 
 
     <label for="mediaName">Название произведения: </label>
@@ -28,7 +28,6 @@
     <br/>
 
     <label for="year_of_Release">Год : </label>
-    <img  th:src="${media.getPosterPath()}" width="230px" height="320px" alt="Постер">
     <input type="text" th:field="*{yearOfRelease}" id="year_of_Release"/>
     <div style="color:red" th:if="${#fields.hasErrors('yearOfRelease')}" th:errors="*{yearOfRelease}">Year Error</div>
     <br/>
@@ -38,6 +37,9 @@
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
     <br/>
 
+    <img  th:src="${media.getPosterPath()}" width="230px" height="320px" alt="Постер">
+
+    <br>
     <label for ="image"> Постер фильма</label>
     <input type="file" name = "imageFile" id="image">
     <div style="color:red" th:if="${#fields.hasErrors('posterPath')}" th:errors="*{posterPath}">Description Error</div>
@@ -64,7 +66,7 @@
     </select>
     <input type="submit"  value="Обновить"/>
     <br>
-    <a href="/admin/allMedias">Вернуться на главную</a>
+    <a href="/admin/allMedia">Вернуться к списку произведений</a>
 </form>
 </body>
 </html>

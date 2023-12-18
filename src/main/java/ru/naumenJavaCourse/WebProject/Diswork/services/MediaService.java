@@ -39,9 +39,13 @@ public class MediaService {
     }
 
     @Transactional
-    public void upload(Media media, MultipartFile imageFile){
-        saveImage(media, imageFile);
-        mediaRepository.save(media);
+    public void upload(Media newMedia, int oldMediaId, MultipartFile imageFile){
+        newMedia.setId(oldMediaId);
+        if (imageFile.isEmpty())
+            newMedia.setPosterPath(this.findById(oldMediaId).getPosterPath());
+        else
+            saveImage(newMedia, imageFile);
+        mediaRepository.save(newMedia);
     }
 
     @Transactional
@@ -53,17 +57,17 @@ public class MediaService {
         String contentType = validateImageAndGetContentType(imageFile);
         String absolutePathFolder = "src/main/webapp/resources/images/";
         String imageFolder = "/resources/images/";
-        try {
-            String posterPath = media.getPosterPath();
-            if (posterPath != null){
-                Files.delete(Paths.get(absolutePathFolder + media.getMediaName() + contentType));
+            try {
+                String posterPath = media.getPosterPath();
+                if (posterPath != null){
+                    Files.delete(Paths.get(absolutePathFolder + media.getId() + "." + contentType));
+                }
+                var path = Paths.get(absolutePathFolder + media.getId() +  "." + contentType);
+                Files.write(path, imageFile.getBytes());
+                media.setPosterPath(imageFolder + media.getId() + "." + contentType);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            var path = Paths.get(absolutePathFolder + media.getMediaName() + contentType);
-            Files.write(path, imageFile.getBytes());
-            media.setPosterPath(imageFolder + media.getMediaName() + contentType);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private String validateImageAndGetContentType(MultipartFile imageFile){

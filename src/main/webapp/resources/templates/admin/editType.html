@@ -5,6 +5,18 @@
     <title>Diswork</title>
 </head>
 <body>
+<form th:method="POST" th:action="@{/admin/type/edit/{id}(id = ${type.getId()})}" th:object="${type}">
 
+    <label for="typeName">Название типа произведения: </label>
+    <input type="text" th:field="*{typeName}" id="typeName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}">Name Error</div>
+    <br/>
+    <label for="description">Описание типа произведения: </label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+    <br/>
+    <input type="submit" value="Обновить!"/>
+    <a href="/admin/allTypes">Вернуться к списку типов произведений</a>
+</form>
 </body>
 </html>

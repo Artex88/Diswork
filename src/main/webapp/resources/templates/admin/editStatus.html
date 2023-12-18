@@ -6,5 +6,14 @@
 </head>
 <body>
 
+<form  th:method="POST" th:action="@{/admin/status/edit/{id}(id = ${status.getId()})}" th:object="${status}">
+
+    <label for="typeName">Название статуса: </label>
+    <input type="text" th:field="*{statusName}" id="typeName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('statusName')}" th:errors="*{statusName}">Name Error</div>
+    <br/>
+    <input type="submit"  value="Обновить"/>
+    <a href="/admin/allTypes">Вернуться к списку статусов</a>
+</form>
 </body>
 </html>

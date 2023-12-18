@@ -24,6 +24,12 @@ public class TagService {
     public void save(Tag tag){
         tagRepository.save(tag);
     }
+
+    @Transactional
+    public void upload(Tag newTag, int oldTagId){
+        newTag.setId(oldTagId);
+        tagRepository.save(newTag);
+    }
     @Transactional(readOnly = true)
     public Optional<Tag> findByName(String name){
         return tagRepository.findByTagName(name);

@@ -7,7 +7,6 @@
 <body>
 <form th:method="POST" th:action="@{/admin/createMedia}" th:object="${media}" enctype="multipart/form-data">
 
-
     <label for="mediaName">Название произведения: </label>
     <input type="text" th:field="*{mediaName}" id="mediaName"/>
     <div style="color:red" th:if="${#fields.hasErrors('mediaName')}" th:errors="*{mediaName}">Name Error</div>

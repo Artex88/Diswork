@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.StatusRepository;
 
@@ -25,6 +26,12 @@ public class StatusService {
     @Transactional
     public void save(Status type){
         statusRepository.save(type);
+    }
+
+    @Transactional
+    public void upload(Status newStatus, int oldStatusId){
+        newStatus.setId(oldStatusId);
+        statusRepository.save(newStatus);
     }
     @Transactional(readOnly = true)
     public Optional<Status> findByName(String name){
