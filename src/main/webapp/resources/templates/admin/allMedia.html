@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<tr th:each="media : ${medias}">
+    <a th:text="${media.getMediaName()}" th:href="@{/admin/media/{id}(id = ${media.getId()})}"></a>
+</tr>
+
+</body>
+</html>

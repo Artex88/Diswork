@@ -35,6 +35,11 @@ public class MediaService {
         mediaRepository.save(media);
     }
 
+    @Transactional
+    public List<Media> getAll(){
+        return mediaRepository.findAll();
+    }
+
     private void saveImage(Media media, MultipartFile imageFile) {
         String absolutePathFolder = "src/main/webapp/resources/images/";
         String imageFolder = "/resources/images/";

@@ -22,6 +22,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 
 @Controller
 @Secured("ROLE_ADMIN")
+@RequestMapping("/admin")
 public class AdminController {
     private final HttpServletRequest request;
     private final UserService userService;
@@ -55,18 +56,18 @@ public class AdminController {
         this.typeValidator = typeValidator;
     }
 
-    @GetMapping("/admin/adminPage")
+    @GetMapping("/adminPage")
     public ModelAndView showAdminPage(){
         int id = (int) request.getSession().getAttribute("id");
         return new ModelAndView("/admin/adminPage", "user", userService.findById((id)));
     }
 
-    @GetMapping("/admin/newType")
+    @GetMapping("/newType")
     public String newType(@ModelAttribute("type") Type type){
         return "admin/createType";
     }
 
-    @PostMapping("/admin/createType")
+    @PostMapping("/createType")
     public String createTag(@ModelAttribute("type") @Valid Type type, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/createType";
@@ -76,12 +77,12 @@ public class AdminController {
         return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newTag")
+    @GetMapping("/newTag")
     public String newTag(@ModelAttribute("tag") Tag tag){
         return "admin/createTag";
     }
 
-    @PostMapping("/admin/createTag")
+    @PostMapping("/createTag")
     public String createTag(@ModelAttribute("tag") @Valid Tag tag, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/createTag";
@@ -91,12 +92,12 @@ public class AdminController {
         return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newStatus")
+    @GetMapping("/newStatus")
     public String newStatus(@ModelAttribute("status") Status status){
         return "admin/createStatus";
     }
 
-    @PostMapping("/admin/createStatus")
+    @PostMapping("/createStatus")
     public String createTag(@ModelAttribute("status") @Valid Status status, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/createStatus";
@@ -106,7 +107,7 @@ public class AdminController {
         return "redirect:/admin/adminPage";
     }
 
-    @GetMapping("/admin/newMedia")
+    @GetMapping("/newMedia")
     public String newMedia(@ModelAttribute("media") Media media, Model model){
         model.addAttribute("tagList", tagService.getAll());
         model.addAttribute("typeList", typeService.getAll());
@@ -114,7 +115,7 @@ public class AdminController {
         return "admin/createMedia";
     }
 
-    @PostMapping("/admin/createMedia")
+    @PostMapping("/createMedia")
     public String createMedia(@ModelAttribute("media") @Valid Media media, @RequestPart(name = "imageFile") MultipartFile imageFile, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/createMedia";
@@ -122,5 +123,29 @@ public class AdminController {
 
         mediaService.save(media, imageFile);
         return "redirect:/admin/adminPage";
+    }
+
+    @GetMapping("/allMedias")
+    public String getAllMedia(Model model){
+        model.addAttribute("medias", mediaService.getAll());
+        return "admin/allMedia";
+    }
+
+    @GetMapping("/allTags")
+    public String getAllTags(Model model){
+        model.addAttribute("tags", tagService.getAll());
+        return "admin/allTags";
+    }
+
+    @GetMapping("/allTypes")
+    public String getAllTypes(Model model){
+        model.addAttribute("types", typeService.getAll());
+        return "admin/allTypes";
+    }
+
+    @GetMapping("/allStatuses")
+    public String getAllStatuses(Model model){
+        model.addAttribute("statuses", statusService.getAll());
+        return "admin/allStatuses";
     }
 }
