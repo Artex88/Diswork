@@ -9,4 +9,6 @@ import java.util.Optional;
 @Service
 public interface StatusRepository extends JpaRepository<Status, Integer> {
     Optional<Status> findByStatusName(String name);
+
+    Optional<Status> findById(int id);
 }

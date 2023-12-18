@@ -6,7 +6,7 @@
 </head>
 <body>
 <tr th:each="status : ${statuses}">
-    <a th:text="${status.getStatusName()}" th:href="@{/admin/statuses/{id}(id = ${status.getId()})}"></a>
+    <a th:text="${status.getStatusName()}" th:href="@{/admin/status/{id}(id = ${status.getId()})}"></a>
 </tr>
 </body>
 </html>

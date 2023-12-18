@@ -1,5 +1,7 @@
 package ru.naumenJavaCourse.WebProject.Diswork.services;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +16,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 public class MediaService {
     private final MediaRepository mediaRepository;
+
+    private static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/png", "image/webp");
+
+    private static final long MAX_IMAGE_SIZE = 204800;
 
     @Autowired
     public MediaService(MediaRepository mediaRepository) {
@@ -36,21 +39,42 @@ public class MediaService {
     }
 
     @Transactional
+    public void upload(Media media, MultipartFile imageFile){
+        saveImage(media, imageFile);
+        mediaRepository.save(media);
+    }
+
+    @Transactional
     public List<Media> getAll(){
         return mediaRepository.findAll();
     }
 
     private void saveImage(Media media, MultipartFile imageFile) {
+        String contentType = validateImageAndGetContentType(imageFile);
         String absolutePathFolder = "src/main/webapp/resources/images/";
         String imageFolder = "/resources/images/";
-        String format = ".png";
         try {
-            var path = Paths.get(absolutePathFolder + media.getMediaName() + format);
+            String posterPath = media.getPosterPath();
+            if (posterPath != null){
+                Files.delete(Paths.get(absolutePathFolder + media.getMediaName() + contentType));
+            }
+            var path = Paths.get(absolutePathFolder + media.getMediaName() + contentType);
             Files.write(path, imageFile.getBytes());
-            media.setPosterPath(imageFolder + media.getMediaName() + format);
+            media.setPosterPath(imageFolder + media.getMediaName() + contentType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String validateImageAndGetContentType(MultipartFile imageFile){
+        if (imageFile.isEmpty() || imageFile.getSize() == 0)
+            throw new RuntimeException();
+        String contentType = imageFile.getContentType();
+        if (contentType == null || !ALLOWED_IMAGE_TYPES.contains(contentType))
+            throw new RuntimeException();
+        if (imageFile.getSize() > MAX_IMAGE_SIZE)
+            throw new RuntimeException();
+        return contentType.substring(6);
     }
 
     @Transactional(readOnly = true)
@@ -86,8 +110,12 @@ public class MediaService {
         return mediaList;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Media findById(int id){
-        return mediaRepository.findById(id).get();
+        Optional<Media> optional = mediaRepository.findById(id);
+        if (optional.isEmpty())
+            throw new EntityNotFoundException();
+
+        return optional.get();
     }
 }

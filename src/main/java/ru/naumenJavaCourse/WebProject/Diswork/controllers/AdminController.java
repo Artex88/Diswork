@@ -20,6 +20,8 @@ import ru.naumenJavaCourse.WebProject.Diswork.util.StatusValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TagValidator;
 import ru.naumenJavaCourse.WebProject.Diswork.util.TypeValidator;
 
+import java.util.List;
+
 @Controller
 @Secured("ROLE_ADMIN")
 @RequestMapping("/admin")
@@ -117,7 +119,7 @@ public class AdminController {
 
     @PostMapping("/createMedia")
     public String createMedia(@ModelAttribute("media") @Valid Media media, @RequestPart(name = "imageFile") MultipartFile imageFile, BindingResult bindingResult){
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors() || imageFile == null)
             return "admin/createMedia";
         mediaValidator.validate(media, bindingResult);
 
@@ -148,4 +150,37 @@ public class AdminController {
         model.addAttribute("statuses", statusService.getAll());
         return "admin/allStatuses";
     }
+
+    @GetMapping("/media/{id}")
+    public String showMedia(@PathVariable("id") int mediaId, Model model){
+        Media media = mediaService.findById(mediaId);
+        model.addAttribute("media", media);
+        model.addAttribute("tagList", tagService.getAll());
+        model.addAttribute("statusList", statusService.getAll());
+        model.addAttribute("typeList", typeService.getAll());
+        return "admin/editMedia";
+    }
+
+    @GetMapping("/status/{id}")
+    public String showStatus(@PathVariable("id") int statusId, Model model){
+        Status status = statusService.findById(statusId);
+        model.addAttribute("status", status);
+        return "admin/editStatus";
+    }
+
+    @GetMapping("/tag/{id}")
+    public String showTag(@PathVariable("id") int tagId, Model model){
+        Tag tag = tagService.findById(tagId);
+        model.addAttribute("tag", tag);
+        return "admin/editTag";
+    }
+
+    @GetMapping("/type/{id}")
+    public String showType(@PathVariable("id") int typeId, Model model){
+        Type type = typeService.findById(typeId);
+        model.addAttribute("type", type);
+        return "admin/editType";
+    }
+
+
 }

@@ -6,7 +6,7 @@
 </head>
 <body>
 <tr th:each="type : ${types}">
-    <a th:text="${type.getTypeName()}" th:href="@{/admin/types/{id}(id = ${type.getId()})}"></a>
+    <a th:text="${type.getTypeName()}" th:href="@{/admin/type/{id}(id = ${type.getId()})}"></a>
 </tr>
 </body>
 </html>

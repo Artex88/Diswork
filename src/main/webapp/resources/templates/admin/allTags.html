@@ -6,7 +6,7 @@
 </head>
 <body>
 <tr th:each="tag : ${tags}">
-    <a th:text="${tag.getTagName()}" th:href="@{/admin/tags/{id}(id = ${tag.getId()})}"></a>
+    <a th:text="${tag.getTagName()}" th:href="@{/admin/tag/{id}(id = ${tag.getId()})}"></a>
 </tr>
 </body>
 </html>

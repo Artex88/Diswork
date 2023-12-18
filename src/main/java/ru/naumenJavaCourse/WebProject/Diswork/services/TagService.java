@@ -1,8 +1,10 @@
 package ru.naumenJavaCourse.WebProject.Diswork.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.TagRepository;
 
@@ -30,5 +32,14 @@ public class TagService {
     @Transactional(readOnly = true)
     public List<Tag> getAll(){
         return tagRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Tag findById(int id){
+        Optional<Tag> optional = tagRepository.findById(id);
+        if (optional.isEmpty())
+            throw new EntityNotFoundException();
+
+        return optional.get();
     }
 }
