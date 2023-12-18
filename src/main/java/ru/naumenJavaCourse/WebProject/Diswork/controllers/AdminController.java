@@ -182,7 +182,7 @@ public class AdminController {
         return "admin/editType";
     }
 
-    @PostMapping("/media/edit/{id}")
+    @PatchMapping("/media/{id}")
     public String updateMedia(@RequestPart(name = "imageFile") MultipartFile multipartFile, @PathVariable("id") int mediaId, @ModelAttribute("media") @Valid Media media, BindingResult bindingResult ){
         if (bindingResult.hasErrors())
             return "admin/editMedia";
@@ -190,7 +190,7 @@ public class AdminController {
         return "redirect:/admin/allMedia";
     }
 
-    @PostMapping("/status/edit/{id}")
+    @PatchMapping("/status/{id}")
     public String updateStatus(@ModelAttribute("status") @Valid Status status, @PathVariable("id") int statusId, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/editStatus";
@@ -198,7 +198,7 @@ public class AdminController {
         return "redirect:/admin/allStatuses";
     }
 
-    @PostMapping("/tag/edit/{id}")
+    @PatchMapping("/tag/{id}")
     public String updateTag(@ModelAttribute("tag") @Valid Tag tag, @PathVariable("id") int tagId, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/editTag";
@@ -206,11 +206,35 @@ public class AdminController {
         return "redirect:/admin/allTags";
     }
 
-    @PostMapping("/type/edit/{id}")
+    @PatchMapping("/type/{id}")
     public String updateType(@ModelAttribute("type") @Valid Type type, @PathVariable("id") int typeId, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "admin/editType";
         typeService.upload(type, typeId);
+        return "redirect:/admin/allTypes";
+    }
+
+    @DeleteMapping("/media/{id}")
+    public String deleteMedia(@PathVariable("id") int mediaId){
+        mediaService.delete(mediaId);
+        return "redirect:/admin/allMedia";
+    }
+
+    @DeleteMapping("/tag/{id}")
+    public String deleteTag(@PathVariable("id") int tagId){
+        tagService.delete(tagId);
+        return "redirect:/admin/allTags";
+    }
+
+    @DeleteMapping("/status/{id}")
+    public String deleteStatus(@PathVariable("id") int statusId){
+        statusService.delete(statusId);
+        return "redirect:/admin/allStatuses";
+    }
+
+    @DeleteMapping("/type/{id}")
+    public String deleteType(@PathVariable("id") int typeId){
+        typeService.delete(typeId);
         return "redirect:/admin/allTypes";
     }
 }

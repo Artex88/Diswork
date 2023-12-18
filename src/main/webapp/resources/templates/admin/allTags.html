@@ -5,8 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<tr th:each="tag : ${tags}">
+<div th:each="tag : ${tags}">
     <a th:text="${tag.getTagName()}" th:href="@{/admin/tag/{id}(id = ${tag.getId()})}"></a>
-</tr>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
 </body>
 </html>

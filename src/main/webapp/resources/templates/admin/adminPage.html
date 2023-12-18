@@ -7,14 +7,27 @@
 <body>
 <p th:text="${'Добро пожаловать в свой личный кабинет АДМИН ' + user.getUsername() + ' твой id ' + user.getId()}">VALUE</p>
 <p th:text="${'Он пока слегка недоработан, но работы ведутся'}">VALUE</p>
-<a href="/admin/newTag">Создание тэгов </a>
-<a href="/admin/newMedia">Создание произведения</a>
-<a href="/admin/newType">Создание типов произведений</a>
-<a href="/admin/newStatus">Создание статусов произведений</a>
-<a href="/admin/allMedia">Администировани произведений</a>
-<a href="/admin/allTags">Администировани тэгов произведений</a>
-<a href="/admin/allStatuses">Администировани статусов произведений</a>
-<a href="/admin/allTypes">Администировани типов произведений</a>
+<div>
+    <a href="/admin/newTag">Создание тэгов </a>
+    <br>
+    <a href="/admin/newMedia">Создание произведения</a>
+    <br>
+    <a href="/admin/newType">Создание типов произведений</a>
+    <br>
+    <a href="/admin/newStatus">Создание статусов произведений</a>
+    <br>
+    <a href="/admin/allMedia">Администированиe произведений</a>
+    <br>
+    <a href="/admin/allTags">Администированиe тэгов произведений</a>
+    <br>
+    <a href="/admin/allStatuses">Администированиe статусов произведений</a>
+    <br>
+    <a href="/admin/allTypes">Администированиe типов произведений</a>
+</div>
+
+<br/>
+<hr/>
+
     <form th:action="@{/logout}" th:method="POST">
         <input type="submit" value="Logout">
     </form>

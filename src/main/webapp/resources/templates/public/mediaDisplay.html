@@ -25,7 +25,7 @@
 <p  th:text="'Статус: ' + ${media.getStatus().getStatusName()}"></p>
 <p>Тэги:</p>
 <tr th:each="tag: ${media.getTags()}">
-    <p th:text="${tag.getTagName()}"></p>
+    <span th:text="${tag.getTagName()}"></span>
 </tr>
 <p  th:text="'Возрастной рейтинг: ' + ${media.getAgeRating()}"></p>
 <p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription()}"></p>

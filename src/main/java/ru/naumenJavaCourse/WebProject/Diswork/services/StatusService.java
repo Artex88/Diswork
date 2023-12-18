@@ -51,4 +51,9 @@ public class StatusService {
 
         return optional.get();
     }
+
+    @Transactional()
+    public void delete(int id){
+        statusRepository.removeById(id);
+    }
 }

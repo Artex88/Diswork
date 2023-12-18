@@ -48,4 +48,9 @@ public class TagService {
 
         return optional.get();
     }
+
+    @Transactional()
+    public void delete(int id){
+        tagRepository.removeById(id);
+    }
 }

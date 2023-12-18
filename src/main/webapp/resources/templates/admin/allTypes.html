@@ -5,8 +5,13 @@
     <title>Diswork</title>
 </head>
 <body>
-<tr th:each="type : ${types}">
+<div th:each="type : ${types}">
     <a th:text="${type.getTypeName()}" th:href="@{/admin/type/{id}(id = ${type.getId()})}"></a>
-</tr>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
 </body>
 </html>

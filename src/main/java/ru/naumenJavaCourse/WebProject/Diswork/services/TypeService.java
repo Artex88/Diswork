@@ -49,4 +49,9 @@ public class TypeService {
 
         return optional.get();
     }
+
+    @Transactional()
+    public void delete(int id){
+        typeRepository.removeById(id);
+    }
 }

@@ -122,4 +122,9 @@ public class MediaService {
 
         return optional.get();
     }
+
+    @Transactional()
+    public void delete(int id){
+        mediaRepository.removeById(id);
+    }
 }

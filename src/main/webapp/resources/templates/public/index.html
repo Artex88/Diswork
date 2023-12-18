@@ -24,10 +24,10 @@
             button.addEventListener('click', function() {
                 let currentUrl = window.location.href;
                 let param = this.getAttribute('data-param');
-                fetch(currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + 'order=' + param)
+                fetch(currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + '?order=' + param)
                     .then(response => response.text())
                     .then(data => {
-                        window.location.href = currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + 'order=' + param;
+                        window.location.href = currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + '?order=' + param;
                     })
                     .catch(error => console.error('Ошибка:', error));
             });

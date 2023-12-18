@@ -5,8 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<tr th:each="status : ${statuses}">
+<div th:each="status : ${statuses}">
     <a th:text="${status.getStatusName()}" th:href="@{/admin/status/{id}(id = ${status.getId()})}"></a>
-</tr>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
 </body>
 </html>

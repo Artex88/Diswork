@@ -17,6 +17,7 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
 
     Optional<Media> findById(int id);
 
+    void removeById(@Param("id") int id);
     @Query("select sum(um.grade) from Media join UserMedia um on um.mediaRatingKey.mediaId = :id ")
     BigDecimal getTotalNumberOfRatingPointsRating(@Param("id") int id);
 
