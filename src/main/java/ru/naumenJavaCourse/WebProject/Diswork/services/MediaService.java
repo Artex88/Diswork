@@ -1,12 +1,10 @@
 package ru.naumenJavaCourse.WebProject.Diswork.services;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.yaml.snakeyaml.introspector.PropertyUtils;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
@@ -14,7 +12,6 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
@@ -116,8 +113,8 @@ public class MediaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Media> getAllMediaAndSort(String orderSetting){
-        List<Media> mediaList =  mediaRepository.findAll();
+    public List<Media> getFilterMediaAndSort(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet, String orderSetting){
+        List<Media> mediaList =  this.filterMedia(type,status,episodeDuration,releasePeriod,tagSet);
         if (Objects.equals(orderSetting, "id"))
             mediaList.sort(Comparator.comparing(Media::getId));
         else if(Objects.equals(orderSetting, "mediaName"))
@@ -130,7 +127,7 @@ public class MediaService {
     }
 
     public List<Media> filterMedia(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet ){
-        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size()).stream().toList();
+        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size());
     }
 
 }

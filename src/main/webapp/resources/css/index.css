@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.containerRight {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+.containerLeft{
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px;
+}

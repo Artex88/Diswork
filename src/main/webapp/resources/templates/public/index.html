@@ -3,37 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/resources/css/index.css" rel="stylesheet"/>
 </head>
 <body>
-    <tr th:each="media : ${medias}">
-        <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
-        <a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a>
-        <p th:text="${media.getType().typeName}"}></p>
-        <p th:text="${media.getYearOfRelease()}"}></p>
-    </tr>
-    <p>
-        <span><strong>СОРТИРОВКА:</strong></span>
-        <button class="sortButton" data-param="id">По id</button>
-        <button class="sortButton" data-param="mediaName">По названию</button>
-        <button class="sortButton" data-param="yearOfRelease">По году выхода</button>
-        <button class="sortButton" data-param="rating">По рейтингу</button>
-    </p>
+    <main>
+        <div class="containerLeft">
+            <div th:each="media : ${medias}">
+                <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
+                <a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a>
+                <p th:text="${media.getType().typeName}"></p>
+                <p th:text="${media.getYearOfRelease()}"></p>
+            </div>
+        </div>
+        <aside class="containerRight">
+            <div>
+                    <span><strong>СОРТИРОВКА:</strong></span>
+                    <button class="sortButton" data-param="id">По id</button>
+                    <button class="sortButton" data-param="mediaName">По названию</button>
+                    <button class="sortButton" data-param="yearOfRelease">По году выхода</button>
+                    <button class="sortButton" data-param="rating">По рейтингу</button>
+            </div>
+            <div>
+                    <span><strong>Фильтрация</strong></span>
+                <div> По тэгам
+                    <ul th:each="tag : ${tags}">
+                        <li th:text="${tag.getTagName()}" th:value="${tag.getId()}"></li>
+                    </ul>
+                </div>
+                <div> По типам
+                    <ul th:each="type : ${types}">
+                        <li th:text="${type.getTypeName()}" th:value="${type.getId()}"></li>
+                    </ul>
+                </div>
+                <div> По статусу
+                    <ul th:each="status : ${statuses}">
+                        <li th:text="${status.getStatusName()}" th:value="${status.getId()}"></li>
+                    </ul>
+                </div>
+                <div> По количеству серий
+                    <ul>
+                        <li th:text="${episodeDurations[0]} + ' (до 12 серий)'" th:value="${episodeDurations[0]}"></li>
+                        <li th:text="${episodeDurations[1]} + ' (до 30 серий)'" th:value="${episodeDurations[1]}"></li>
+                        <li th:text="${episodeDurations[2]} + ' (более 31 серии)'" th:value="${episodeDurations[2]}"></li>
+                    </ul>
+                </div>
+                <div> По дате выхода
+                    <ul th:each="releasePeriod : ${releasePeriods}">
+                        <li th:text="${releasePeriod}" th:value="${releasePeriods}"></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </main>
 
-<!--    <form th:action="@{index/media/filter}" method="get">-->
-<!--        <label for="type">Тип:</label>-->
-<!--        <select id="type" name="typeId">-->
-<!--        </select>-->
+    <script>
+        // Обработчик выбора элементов списка
+        $('ul').on('click', 'li', function() {
+            // Получаем текст и значение выбранного элемента
+            let text = $(this).text();
+            let value = $(this).attr('th:value');
 
-<!--        <label for="tags">Тэги:</label>-->
-<!--        <select id="tags" name="tagIds" multiple>-->
-<!--        </select>-->
-
-<!--        <button type="submit">Применить фильтр</button>-->
-<!--    </form>-->
-
-<!--    &lt;!&ndash; Отображение результатов &ndash;&gt;-->
-<!--    <div th:each="media : ${filteredMedia}">-->
-<!--    </div>-->
+            // Здесь вы можете выполнить дополнительные действия с выбранным текстом и значением
+            console.log('Выбрано: ' + text + ', Значение: ' + value);
+        });
+    </script>
 
     <script>
         let buttons = document.getElementsByClassName('sortButton');
@@ -55,22 +88,23 @@
             });
         });
         function removeParam(key, sourceURL) {
-            let splitUrl = sourceURL.split('?'),
-                rtn = splitUrl[0],
+            let rtn = sourceURL.split("?")[0],
                 param,
                 params_arr = [],
-                queryString = (sourceURL.indexOf("?") !== -1) ? splitUrl[1] : '';
-            if (queryString !== '') {
-                params_arr = queryString.split('&');
+                queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+            if (queryString !== "") {
+                params_arr = queryString.split("&");
                 for (let i = params_arr.length - 1; i >= 0; i -= 1) {
-                    param = params_arr[i].split('=')[0];
+                    param = params_arr[i].split("=")[0];
                     if (param === key) {
                         params_arr.splice(i, 1);
                     }
                 }
+                rtn = rtn + "?" + params_arr.join("&");
             }
-            return rtn
+            return rtn;
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
