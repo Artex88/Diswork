@@ -8,8 +8,10 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.TagRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TagService {
@@ -52,5 +54,14 @@ public class TagService {
     @Transactional()
     public void delete(int id){
         tagRepository.removeById(id);
+    }
+
+    @Transactional
+    public Set<Tag> getTagsListFromIds(Set<Integer> integerSet){
+        Set<Tag> tagSet = new HashSet<>();
+        for (var id : integerSet){
+            tagSet.add(this.findById(id));
+        }
+        return tagSet;
     }
 }

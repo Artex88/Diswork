@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.naumenJavaCourse.WebProject.Diswork.dto.GradingDTO;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.User;
-import ru.naumenJavaCourse.WebProject.Diswork.services.MediaService;
-import ru.naumenJavaCourse.WebProject.Diswork.services.UserService;
+import ru.naumenJavaCourse.WebProject.Diswork.services.*;
 
 import java.util.*;
 

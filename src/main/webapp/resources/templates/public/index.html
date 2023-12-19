@@ -18,6 +18,23 @@
         <button class="sortButton" data-param="yearOfRelease">По году выхода</button>
         <button class="sortButton" data-param="rating">По рейтингу</button>
     </p>
+
+<!--    <form th:action="@{index/media/filter}" method="get">-->
+<!--        <label for="type">Тип:</label>-->
+<!--        <select id="type" name="typeId">-->
+<!--        </select>-->
+
+<!--        <label for="tags">Тэги:</label>-->
+<!--        <select id="tags" name="tagIds" multiple>-->
+<!--        </select>-->
+
+<!--        <button type="submit">Применить фильтр</button>-->
+<!--    </form>-->
+
+<!--    &lt;!&ndash; Отображение результатов &ndash;&gt;-->
+<!--    <div th:each="media : ${filteredMedia}">-->
+<!--    </div>-->
+
     <script>
         let buttons = document.getElementsByClassName('sortButton');
         Array.from(buttons).forEach(function(button) {
@@ -27,7 +44,12 @@
                 fetch(currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + '?order=' + param)
                     .then(response => response.text())
                     .then(data => {
-                        window.location.href = currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + '?order=' + param;
+                        if (currentUrl.includes("?order=")){
+                            currentUrl = removeParam("order", currentUrl);
+                            currentUrl = currentUrl + '?order=' + param;
+                            window.location.href = currentUrl;
+                        } else
+                            window.location.href = currentUrl + '?order=' + param;
                     })
                     .catch(error => console.error('Ошибка:', error));
             });
@@ -46,7 +68,6 @@
                         params_arr.splice(i, 1);
                     }
                 }
-                rtn = rtn + '?' + params_arr.join('&');
             }
             return rtn
         }

@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "media")
 public class Media {
 
-    private static final DecimalFormat decfor = new DecimalFormat("0.00");
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +54,13 @@ public class Media {
     @NotNull
     private double rating;
 
-    @ManyToMany
+    @Column(name = "release_period")
+    private String releasePeriod;
+
+    @Column(name = "episode_duration")
+    private String episodeDuration;
+
+    @ManyToMany()
     @NotNull
     @JoinTable(
             name = "media_tag",
@@ -63,8 +68,6 @@ public class Media {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags;
-
-
 
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
@@ -183,5 +186,21 @@ public class Media {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getReleasePeriod() {
+        return releasePeriod;
+    }
+
+    public void setReleasePeriod(String releasePeriod) {
+        this.releasePeriod = releasePeriod;
+    }
+
+    public String getEpisodeDuration() {
+        return episodeDuration;
+    }
+
+    public void setEpisodeDuration(String episodeDuration) {
+        this.episodeDuration = episodeDuration;
     }
 }

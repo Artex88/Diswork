@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 
 import java.io.IOException;
@@ -39,6 +42,28 @@ public class MediaService {
     }
 
     @Transactional
+    public List<Media> getAll(){
+        return mediaRepository.findAll();
+    }
+    @Transactional()
+    public void delete(int id){
+        mediaRepository.removeById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Media> findByName(String name){
+        return mediaRepository.findByMediaName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public Media findById(int id){
+        Optional<Media> optional = mediaRepository.findById(id);
+        if (optional.isEmpty())
+            throw new EntityNotFoundException();
+        return optional.get();
+    }
+
+    @Transactional
     public void upload(Media newMedia, int oldMediaId, MultipartFile imageFile){
         newMedia.setId(oldMediaId);
         if (imageFile.isEmpty())
@@ -48,11 +73,6 @@ public class MediaService {
         mediaRepository.save(newMedia);
     }
 
-    @Transactional
-    public List<Media> getAll(){
-        return mediaRepository.findAll();
-    }
-
     private void saveImage(Media media, MultipartFile imageFile) {
         String contentType = validateImageAndGetContentType(imageFile);
         String absolutePathFolder = "src/main/webapp/resources/images/";
@@ -60,11 +80,11 @@ public class MediaService {
             try {
                 String posterPath = media.getPosterPath();
                 if (posterPath != null){
-                    Files.delete(Paths.get(absolutePathFolder + media.getId() + "." + contentType));
+                    Files.delete(Paths.get(absolutePathFolder + media.getMediaName() + "." + contentType));
                 }
-                var path = Paths.get(absolutePathFolder + media.getId() +  "." + contentType);
+                var path = Paths.get(absolutePathFolder + media.getMediaName() +  "." + contentType);
                 Files.write(path, imageFile.getBytes());
-                media.setPosterPath(imageFolder + media.getId() + "." + contentType);
+                media.setPosterPath(imageFolder + media.getMediaName() + "." + contentType);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -96,11 +116,6 @@ public class MediaService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Media> findByName(String name){
-        return mediaRepository.findByMediaName(name);
-    }
-
-    @Transactional(readOnly = true)
     public List<Media> getAllMediaAndSort(String orderSetting){
         List<Media> mediaList =  mediaRepository.findAll();
         if (Objects.equals(orderSetting, "id"))
@@ -114,17 +129,8 @@ public class MediaService {
         return mediaList;
     }
 
-    @Transactional(readOnly = true)
-    public Media findById(int id){
-        Optional<Media> optional = mediaRepository.findById(id);
-        if (optional.isEmpty())
-            throw new EntityNotFoundException();
-
-        return optional.get();
+    public List<Media> filterMedia(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet ){
+        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size());
     }
 
-    @Transactional()
-    public void delete(int id){
-        mediaRepository.removeById(id);
-    }
 }

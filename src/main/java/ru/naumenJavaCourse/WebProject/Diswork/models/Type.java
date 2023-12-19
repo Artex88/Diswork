@@ -27,7 +27,7 @@ public class Type {
     @Size(max = 255, message = "Описание не может быть длинее 255 символов")
     private String description;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.PERSIST)
     private List<Media> mediaList;
 
     public Type() {
