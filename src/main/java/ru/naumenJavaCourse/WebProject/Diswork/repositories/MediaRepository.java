@@ -37,10 +37,10 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
     void updateMediaByRating(@Param("rating") BigDecimal rating, @Param("id") int id);
 
     @Query("select m from Media as m where" +
-            " m.type = coalesce(:type, m.type) and" +
-            " m.status = coalesce(:status, m.status) and" +
-            " m.releasePeriod = coalesce(:releasePeriod, m.releasePeriod) and" +
-            " m.episodeDuration = coalesce(:episodeDuration, m.episodeDuration) and" +
+            "(:type is null or m.type = :type) and" +
+            "(:status is null or m.status = :status)  and" +
+            "(:releasePeriod is null or m.releasePeriod = :releasePeriod) and" +
+            "(:episodeDuration is null or m.episodeDuration = :episodeDuration) and" +
             " :tagsSize = (select COUNT(t) from m.tags as t where t in :tags)")
     List<Media> filter(@Param("type") Type type,
                            @Param("status")  Status status,

@@ -130,7 +130,7 @@ public class MediaService {
     }
 
     public List<Media> filterMedia(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet ){
-        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size());
+        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size()).stream().toList();
     }
 
 }

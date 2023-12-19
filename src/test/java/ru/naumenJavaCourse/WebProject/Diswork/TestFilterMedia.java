@@ -70,8 +70,8 @@ public class TestFilterMedia extends DisworkApplicationTests {
 
     @Test
     public void testNullFilterMedia(){
-        List<Media> media1 = mediaService.filterMedia(null, null, null, null, Collections.emptySet());
-        assertEquals(media1.size(), mediaRepository.findAll().size());
+        List<Media> media2 = mediaService.filterMedia(null, null,null,null, Collections.emptySet());
+        assertEquals(media2.size(), mediaRepository.findAll().size());
     }
 
     @Test
