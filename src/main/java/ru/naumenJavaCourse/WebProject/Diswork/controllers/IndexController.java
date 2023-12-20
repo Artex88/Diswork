@@ -51,14 +51,7 @@ public class IndexController {
         if (order == null || !Arrays.stream(Media.class.getDeclaredFields()).filter(field -> field.getType().isPrimitive() || field.getType().equals(String.class)).anyMatch(field -> field.getName().equals(finalOrder)))
             order = "rating";
         List<Media> mediaList = mediaService.getFilterMediaAndSort(type, status, episodeDuration, releasePeriod, tagSet, order);
-        model.addAttribute("medias", mediaList);
-        model.addAttribute("tags", tagService.getAll());
-        model.addAttribute("statuses", statusService.getAll());
-        model.addAttribute("types", typeService.getAll());
-        model.addAttribute("episodeDurations", List.of("короткий", "средний", "длинный"));
-        model.addAttribute("releasePeriods", List.of(
-                "более старые", "1930e годы", "1940e годы", "1950e годы", "1960e годы", "1970e годы",
-                "1980e годы", "1990e годы", "2000e годы", "2010e годы","2020 год","2021 год","2022 год","2023 год", "2024 год"));
+        fillModel(model, mediaList);
         return "public/index";
     }
 
@@ -88,5 +81,16 @@ public class IndexController {
         model.addAttribute("grading", new GradingDTO());
         model.addAttribute("avgRating", media.getRating());
         return "public/mediaDisplay";
+    }
+
+    private void fillModel(Model model, List<Media> mediaList) {
+        model.addAttribute("medias", mediaList);
+        model.addAttribute("tags", tagService.getAll());
+        model.addAttribute("statuses", statusService.getAll());
+        model.addAttribute("types", typeService.getAll());
+        model.addAttribute("episodeDurations", List.of("короткий", "средний", "длинный"));
+        model.addAttribute("releasePeriods", List.of(
+                "более старые", "1930e годы", "1940e годы", "1950e годы", "1960e годы", "1970e годы",
+                "1980e годы", "1990e годы", "2000e годы", "2010e годы","2020 год","2021 год","2022 год","2023 год", "2024 год"));
     }
 }

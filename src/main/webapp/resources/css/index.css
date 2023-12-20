@@ -1,15 +1,25 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    display: flex;
+    justify-content: space-between; /* Распределение между контейнерами */
+    padding: 20px;
+}
+
+.containerLeft {
+    display: flex; /* Располагаем дочерние элементы внутри по горизонтали */
+    flex-wrap: wrap; /* Разрешаем перенос строк, если не умещается */
+    gap: 20px; /* Расстояние между элементами */
+}
+
+.containerLeft > div {
+    flex-grow: 1; /* Растягиваем элементы по ширине */
 }
 
 .containerRight {
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px;
-}
-.containerLeft{
-    display: flex;
-    justify-content: flex-start;
-    padding: 20px;
+    width: 250px; /* Ширина блока containerRight */
 }

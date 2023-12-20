@@ -118,11 +118,11 @@ public class MediaService {
         if (Objects.equals(orderSetting, "id"))
             mediaList.sort(Comparator.comparing(Media::getId));
         else if(Objects.equals(orderSetting, "mediaName"))
-            mediaList.sort(Comparator.comparing(Media::getYearOfRelease));
-        else if(Objects.equals(orderSetting, "yearOfRelease"))
             mediaList.sort(Comparator.comparing(Media::getMediaName));
+        else if(Objects.equals(orderSetting, "yearOfRelease"))
+            mediaList.sort(Comparator.comparing(Media::getYearOfRelease, Comparator.reverseOrder()));
         else if(Objects.equals(orderSetting, "rating"))
-            mediaList.sort(Comparator.comparing(Media::getRating));
+            mediaList.sort(Comparator.comparing(Media::getRating, Comparator.reverseOrder()));
         return mediaList;
     }
 

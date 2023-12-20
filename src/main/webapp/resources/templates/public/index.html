@@ -3,108 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="/resources/css/index.css" rel="stylesheet"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Times New R, sans-serif;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .containerLeft {
+            width: 1600px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 450px;
+            row-gap: 5px;
+            gap: 20px;
+        }
+
+        .containerRight {
+            width: 300px;
+        }
+        .selected{
+            color: red;
+        }
+        .withoutComa{
+            list-style-type: none;
+        }
+
+    </style>
 </head>
 <body>
     <main>
-        <div class="containerLeft">
+        <section class="containerLeft">
             <div th:each="media : ${medias}">
-                <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
-                <a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a>
+                <p><img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер"></p>
+                <p><a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a></p>
                 <p th:text="${media.getType().typeName}"></p>
                 <p th:text="${media.getYearOfRelease()}"></p>
+                <p th:text="'Рейтинг: ' + ${media.getRating()}"></p>
             </div>
-        </div>
+        </section>
         <aside class="containerRight">
             <div>
-                    <span><strong>СОРТИРОВКА:</strong></span>
-                    <button class="sortButton" data-param="id">По id</button>
-                    <button class="sortButton" data-param="mediaName">По названию</button>
-                    <button class="sortButton" data-param="yearOfRelease">По году выхода</button>
-                    <button class="sortButton" data-param="rating">По рейтингу</button>
+                <span><strong>СОРТИРОВКА:</strong></span>
+                <ul class="singleton" >
+                    <li th:attr="value=${'id'}, paramName='order'">По id</li>
+                    <li th:attr="value=${'mediaName'}, paramName='order'">По названию</li>
+                    <li th:attr="value=${'yearOfRelease'}, paramName='order'">По году выхода</li>
+                    <li th:attr="value=${'rating'}, paramName='order'">По рейтингу</li>
+                </ul>
+                <hr>
             </div>
             <div>
-                    <span><strong>Фильтрация</strong></span>
+                    <span><strong>Фильтрация:</strong></span>
                 <div> По тэгам
-                    <ul th:each="tag : ${tags}">
-                        <li th:text="${tag.getTagName()}" th:value="${tag.getId()}"></li>
+                    <ul class="multiple" >
+                        <li th:each="tag : ${tags}">
+                                <input class="tag-checkbox" th:attr="value=${tag.getId()}, paramName='tagIds'" th:text="${tag.getTagName()}" type="checkbox">
+                        </li>
                     </ul>
                 </div>
                 <div> По типам
-                    <ul th:each="type : ${types}">
-                        <li th:text="${type.getTypeName()}" th:value="${type.getId()}"></li>
+                    <ul class="singleton"  >
+                        <li th:each="type : ${types}" th:text="${type.getTypeName()}" th:attr="value=${type.getId()},paramName='typeId'"></li>
                     </ul>
                 </div>
-                <div> По статусу
-                    <ul th:each="status : ${statuses}">
-                        <li th:text="${status.getStatusName()}" th:value="${status.getId()}"></li>
+                <div > По статусу
+                    <ul class="singleton"  >
+                        <li th:each="status : ${statuses}" th:text="${status.getStatusName()}" th:attr="value=${status.getId()},paramName='statusId'"></li>
                     </ul>
                 </div>
                 <div> По количеству серий
-                    <ul>
-                        <li th:text="${episodeDurations[0]} + ' (до 12 серий)'" th:value="${episodeDurations[0]}"></li>
-                        <li th:text="${episodeDurations[1]} + ' (до 30 серий)'" th:value="${episodeDurations[1]}"></li>
-                        <li th:text="${episodeDurations[2]} + ' (более 31 серии)'" th:value="${episodeDurations[2]}"></li>
+                    <ul class="singleton" >
+                        <li th:text="${episodeDurations[0]} + ' (до 12 серий)'" th:attr="value=${episodeDurations[0]}, paramName='episodeDuration'"></li>
+                        <li th:text="${episodeDurations[1]} + ' (до 30 серий)'" th:attr="value=${episodeDurations[1]}, paramName='episodeDuration'"></li>
+                        <li th:text="${episodeDurations[2]} + ' (более 31 серии)'" th:attr="value=${episodeDurations[2]}, paramName='episodeDuration'"></li>
                     </ul>
                 </div>
                 <div> По дате выхода
-                    <ul th:each="releasePeriod : ${releasePeriods}">
-                        <li th:text="${releasePeriod}" th:value="${releasePeriods}"></li>
+                    <ul class="singleton" >
+                        <li th:each="releasePeriod : ${releasePeriods}" th:text="${releasePeriod}" th:attr="value=${releasePeriod}, paramName='releasePeriod'"></li>
                     </ul>
                 </div>
             </div>
         </aside>
     </main>
-
-    <script>
-        // Обработчик выбора элементов списка
-        $('ul').on('click', 'li', function() {
-            // Получаем текст и значение выбранного элемента
-            let text = $(this).text();
-            let value = $(this).attr('th:value');
-
-            // Здесь вы можете выполнить дополнительные действия с выбранным текстом и значением
-            console.log('Выбрано: ' + text + ', Значение: ' + value);
-        });
-    </script>
-
-    <script>
-        let buttons = document.getElementsByClassName('sortButton');
-        Array.from(buttons).forEach(function(button) {
-            button.addEventListener('click', function() {
-                let currentUrl = window.location.href;
-                let param = this.getAttribute('data-param');
-                fetch(currentUrl.includes("?order=") ? removeParam("order", currentUrl) : currentUrl + '?order=' + param)
-                    .then(response => response.text())
-                    .then(data => {
-                        if (currentUrl.includes("?order=")){
-                            currentUrl = removeParam("order", currentUrl);
-                            currentUrl = currentUrl + '?order=' + param;
-                            window.location.href = currentUrl;
-                        } else
-                            window.location.href = currentUrl + '?order=' + param;
-                    })
-                    .catch(error => console.error('Ошибка:', error));
-            });
-        });
-        function removeParam(key, sourceURL) {
-            let rtn = sourceURL.split("?")[0],
-                param,
-                params_arr = [],
-                queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
-            if (queryString !== "") {
-                params_arr = queryString.split("&");
-                for (let i = params_arr.length - 1; i >= 0; i -= 1) {
-                    param = params_arr[i].split("=")[0];
-                    if (param === key) {
-                        params_arr.splice(i, 1);
-                    }
-                }
-                rtn = rtn + "?" + params_arr.join("&");
-            }
-            return rtn;
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    let selectedItems = sessionStorage.getItem('selectedItems');
+    if (selectedItems) {
+        let selectedItemsParsed = JSON.parse(selectedItems);
+        for (let i = 0; i < selectedItemsParsed.length; i++) {
+            let item = selectedItemsParsed[i];
+            if (item.paramName === 'tagIds'){
+                for (let tagId = 0; tagId < item.value.length; tagId++) {
+                    let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[tagId] + '"]');
+                    if (selectedCheckBoxElement)
+                        selectedCheckBoxElement.prop("checked", true);
+                }
+            }
+            else {
+                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
+                if (selectedLiElement) {
+                    selectedLiElement.addClass('selected');
+                }
+            }
+        }
+        checkUrlParametersAndRemoveClass();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        $("ul.multiple").on('click', 'li input', function () {
+            updateUrlParams()
+        });
+
+
+
+
+        $("ul.singleton li").on('click', function () {
+            let value = $(this).attr('value');
+            let paramName = $(this).attr('paramName');
+            let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
+
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+                removeUrlParameter(paramName);
+                let updatedItems = selectedItems.filter(function (item) {
+                    return item.paramName !== paramName || item.value !== value;
+                });
+                sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+            }
+            else if (selectedItems.some(function (item) { return item.paramName === paramName})){
+                let item = selectedItems.find(function (item){
+                    return item.paramName === paramName;
+                });
+                let updatedItems = selectedItems.filter(function (item) {
+                    return item.paramName !== paramName;
+                });
+                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
+                selectedLiElement.removeClass('selected');
+                updatedItems.push({ paramName: paramName, value: value });
+                sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+                $(this).addClass('selected');
+                addOrUpdateUrlParameter(paramName, value);
+            }
+            else{
+                selectedItems.push({ paramName: paramName, value: value });
+                sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+                $(this).addClass('selected');
+                addOrUpdateUrlParameter(paramName, value);
+            }
+            window.location.reload()
+        });
+    });
+
+    function updateUrlParams() {
+        let selectedTags = [];
+        $(".tag-checkbox:checked").each(function () {
+            selectedTags.push($(this).val());
+        });
+        addOrUpdateUrlParameter('tagIds', selectedTags.join(','))
+        let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
+        let updatedItems = selectedItems.filter(function (item) {
+            return item.paramName !== 'tagIds';
+        });
+        updatedItems.push({ paramName: 'tagIds', value: selectedTags });
+        sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+        window.location.reload()
+    }
+
+    function checkUrlParametersAndRemoveClass() {
+        let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
+        selectedItems.forEach(function(item) {
+            if (item.paramName === 'tagIds'){
+                let urlParams = new URLSearchParams(window.location.search);
+                let tagIdsParam = urlParams.get('tagIds');
+                let tagIdsArray = [];
+                if (tagIdsParam){
+                    tagIdsArray = tagIdsParam.split(',').map(Number);
+                    for (let i = 0; i < item.value.length; i++){
+                        let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[i] + '"]');
+                        if (!tagIdsArray.includes(parseInt(item.value[i])))
+                            selectedCheckBoxElement.prop("checked", false);
+                    }
+                } else{
+                    for (let i = 0; i < item.value.length; i++){
+                        let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[i] + '"]');
+                        selectedCheckBoxElement.prop("checked", false)
+                }
+            }
+            } else{
+                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
+                if (selectedLiElement && !urlParameterExists(item.paramName)) {
+                    selectedLiElement.removeClass('selected');
+                }
+            }
+        });
+    }
+    function urlParameterExists(paramName) {
+        let searchParams = new URLSearchParams(window.location.search);
+        return searchParams.has(paramName);
+    }
+
+    function addOrUpdateUrlParameter(key, value) {
+        let currentUrl = window.location.href;
+        let urlParts = currentUrl.split('?');
+
+        if (urlParts.length > 1) {
+            let queryParams = urlParts[1].split('&');
+            let paramFound = false;
+            let updatedParams = queryParams.map(function (param) {
+                let paramParts = param.split('=');
+                if (paramParts[0] === key) {
+                    paramFound = true;
+                    return key + '=' + value;
+                }
+                return param;
+            });
+            if (!paramFound)
+                updatedParams.push(key + '=' + value);
+            urlParts[1] = updatedParams.join('&');
+        } else
+            urlParts.push(key + '=' + value);
+
+        let newUrl = urlParts.join('?');
+        window.history.replaceState({path: newUrl}, '', newUrl);
+    }
+
+    function removeUrlParameter(parameterName) {
+        let currentUrl = window.location.href;
+        let urlParts = currentUrl.split('?');
+        if (urlParts.length > 1) {
+            let queryParams = urlParts[1].split('&');
+            let paramFound = false;
+            let updatedParams = queryParams.filter(function (param) {
+                let paramParts = param.split('=');
+                if (paramParts[0] === parameterName) {
+                    paramFound = true;
+                    return false;
+                }
+                return true;
+            });
+            if (paramFound) {
+                urlParts[1] = updatedParams.join('&');
+                let newUrl = urlParts.join('?');
+                window.history.replaceState({path: newUrl}, '', newUrl);
+            }
+        }
+    }
+</script>
 </html>
