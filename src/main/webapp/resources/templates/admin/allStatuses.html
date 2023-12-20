@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="status : ${statuses}">
+    <a th:text="${status.getStatusName()}" th:href="@{/admin/status/{id}(id = ${status.getId()})}"></a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
+</body>
+</html>

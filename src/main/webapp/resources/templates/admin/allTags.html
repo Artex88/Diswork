@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="tag : ${tags}">
+    <a th:text="${tag.getTagName()}" th:href="@{/admin/tag/{id}(id = ${tag.getId()})}"></a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
+</body>
+</html>

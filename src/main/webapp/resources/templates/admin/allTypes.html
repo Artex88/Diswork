@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<div th:each="type : ${types}">
+    <a th:text="${type.getTypeName()}" th:href="@{/admin/type/{id}(id = ${type.getId()})}"></a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/adminPage">Вернуться на главную страничку админа</a>
+</body>
+</html>

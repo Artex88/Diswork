@@ -16,180 +16,39 @@
 <body>
 
 <section>
-<h1  th:text="${media.mediaName}"></h1>
-<img  th:src="${media.posterPath}" width="230px" height="320px" alt="Постер">
-<p  th:text="'Тип: ' + ${media.type.typeName}"></p>
-<p  th:text="'Количество эпизодов: ' + ${media.episodeCount}"></p>
-<p  th:text="'Длительность эпизода: ' + ${media.duration} + ' минут'"></p>
-<p  th:text="'Статус: ' + ${media.status.statusName}"></p>
+<h1  th:text="${ media.getMediaName() != null ? media.getMediaName() : 'Название не указано'}"></h1>
+<img  th:src="${media.getPosterPath()}" width="230px" height="320px" alt="Постер">
+<p  th:text="'Тип: ' + ${ media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+    <p  th:text="'Год выхода: ' + ${ media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
+<p  th:text="'Количество эпизодов: ' + ${media.getEpisodeCount() != null ? media.getEpisodeCount() : ' Кол-во  эпизодов не указано'}"></p>
+<p  th:text="'Длительность эпизода: ' + ${media.getDuration() != null ? media.getDuration() + ' минут' : 'Длительность не указана'}"></p>
+<p  th:text="'Статус: ' + ${media.getStatus() != null ? media.getStatus().getStatusName() : 'Статус не указан'}"></p>
 <p>Тэги:</p>
-<tr th:each="tag: ${media.tags}">
-    <p th:text="${tag.tagName}"></p>
+<tr th:each="tag: ${media.getTags()}">
+    <span th:text="${tag.getTagName()}"></span>
 </tr>
-<p  th:text="'Возрастной рейтинг: ' + ${media.ageRating}"></p>
-<p  th:text="'ОПИСАНИЕ: ' + ${media.description}"></p>
+<p  th:text="'Возрастной рейтинг: ' + ${media.getAgeRating() != null ? media.getAgeRating() : 'Возрастной рейтинг не указан'}"></p>
+<p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription() != null ? media.getDescription() : 'описание не указано' }"></p>
     <p th:text = "'Рейтинг: ' + ${avgRating}"></p>
 </section>
 <section>
-<td><button id="addButton" th:one="${media.id}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
+<td><button id="addButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
     <div id= "authorizedUserSection">
-<td><button id="deleteButton" th:one="${media.id}" th:two="${_csrf.token}" onclick="fetchAndDeleteMedia(this.getAttribute('one'), this.getAttribute('two'))">Удалить из избранного</button></td>
+<td><button id="deleteButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndDeleteMedia(this.getAttribute('one'), this.getAttribute('two'))">Удалить из избранного</button></td>
     <label id ="valueSelectLabel" for="valueSelect">Оцените произведение:</label>
-    <select id="valueSelect" name="selectedValue" th:value="*{grading.grade}">
+    <select id="valueSelect" name="selectedValue" th:value="*{grading.getGrade()}">
         <option id="valueOption" th:each="value : ${#numbers.sequence(1, 10)}" th:value="${value}" th:text="${value}"></option>
     </select>
-    <td><button id="gradingButton" th:one="${media.id}" th:two="${_csrf.token}" onclick="fetchAndAssessmentMedia(this.getAttribute('one'), this.getAttribute('two'))">Оценить</button></td>
+    <td><button id="gradingButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAssessmentMedia(this.getAttribute('one'), this.getAttribute('two'))">Оценить</button></td>
     <div id="gradeTextArea" ></div>
     </div>
 </section>
 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 <input type="hidden" id="isAddButtonHidden"  th:value="${isAddButtonHidden}">
 <input type="hidden" id="grade"  th:value="${grade}">
-<script th:inline="javascript">
-    const authorizedUserSection = document.getElementById("authorizedUserSection");
-    const addButton = document.getElementById('addButton');
-    const isAddButtonHidden = document.getElementById('isAddButtonHidden').value;
-    const gradeTextArea = document.getElementById('gradeTextArea');
-    const grade = document.getElementById('grade');
-    if (grade.value === "0")
-        gradeTextArea.textContent = "Вы ещё не оценивали это произведение";
-    else
-        gradeTextArea.textContent = "Ваша оценка: " + grade.value;
 
 
-    if (isAddButtonHidden === 'true'){
-        addButton.style.display='none';
-        authorizedUserSection.style.display='block'
-    }else {
-        addButton.style.display='block';
-        authorizedUserSection.style.display='none'
-    }
-
-    function handleAddButton(message){
-         if (message === "Произведение добавленно"){
-             addButton.style.display='none';
-             authorizedUserSection.style.display='block'
-         }
-
-    }
-    function handleDeleteButton(message){
-         if (message === "Произведение удалено из избранного"){
-            addButton.style.display='block';
-             authorizedUserSection.style.display='none'
-         }
-
-    }
-    async function fetchAndAddMedia(mediaId, csrf) {
-
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrf
-            },
-            body: JSON.stringify({"id": mediaId})
-        };
-        fetch('/index/media/add', requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                handleAddButton(data.message)
-                ShowToast("success", data.message)
-            })
-            .catch(error => {
-                ShowToast('warning', "Для этого действия вам необходима регистрация на сайте!")
-            });
-    }
-
-    async function fetchAndDeleteMedia(mediaId, csrf) {
-
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrf
-            },
-            body: JSON.stringify({"id": mediaId})
-        };
-        fetch('/index/media/delete', requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                handleDeleteButton(data.message)
-                ShowToast("success", data.message)
-            })
-            .catch(error => {
-                ShowToast('warning', "Для этого действия вам необходима регистрация на сайте!")
-            });
-
-    }
-
-    async function fetchAndAssessmentMedia(mediaId, csrf) {
-        const grade = document.getElementById('valueSelect');
-        if (grade.value === "0"){
-            ShowToast('error', "Вам необходимо оценить произведение!")
-        }
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrf
-            },
-            body: JSON.stringify({"mediaId": mediaId, "grade": grade.value })
-        };
-        fetch('/index/media/assessment', requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.message === "Произведения нету в избранном")
-                    ShowToast('success', data.message);
-                else {
-                    ShowToast('success', "Вы оценинили данное произведние на " + data.message);
-                    gradeTextArea.textContent = "Ваша оценка: " + data.message;
-                }
-            })
-            .catch(error => {
-                ShowToast('warning', "Для этого действия вам необходима регистрация на сайте!")
-            });
-
-    }
-    function ShowToast(type, message){
-        Command: toastr[type](message)
-
-        toastr.options = {
-            "closeButton": false,
-            "debug": false,
-            "newestOnTop": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "3500",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
-    }
-</script>
+<script src="/resources/js/mediaDisplay.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/resources/js/toastr.min.js"></script>
 </body>

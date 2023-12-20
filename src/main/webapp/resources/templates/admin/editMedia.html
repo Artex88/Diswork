@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Diswork</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/admin/createMedia}" th:object="${media}" enctype="multipart/form-data">
-
+<form th:method="patch" th:action="@{/admin/media/{id}(id = ${media.getId()})}" th:object="${media}" enctype="multipart/form-data">
     <label for="mediaName">Название произведения: </label>
     <input type="text" th:field="*{mediaName}" id="mediaName"/>
     <div style="color:red" th:if="${#fields.hasErrors('mediaName')}" th:errors="*{mediaName}">Name Error</div>
@@ -14,14 +13,14 @@
 
     <label for="types">Тип произведения: </label>
     <select id="types" th:object="${media}" th:field="*{type}">
-        <option th:each="oneType: ${typeList}"  th:value="${oneType.getId()}" th:text="${oneType.typeName}"></option>
+        <option th:each="oneType: ${typeList}" th:value="${oneType.getId()}" th:text="${oneType.typeName}"></option>
     </select>
     <div style="color:red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Name Error</div>
     <br/>
 
     <label for="status">Статус произведения: </label>
     <select id="status" th:object="${media}" th:field="*{status}">
-        <option th:each="oneStatus: ${statusList}"  th:value="${oneStatus.getId()}" th:text="${oneStatus.getStatusName()}"></option>
+        <option th:each="oneStatus: ${statusList}" th:value="${oneStatus.getId()}" th:text="${oneStatus.getStatusName()}"></option>
     </select>
     <div style="color:red" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Name Error</div>
     <br/>
@@ -36,8 +35,11 @@
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
     <br/>
 
-    <label for ="image"> Постер фильма</label>
-    <input type="file" name = "imageFile" id="image">
+    <img th:src="${media.getPosterPath()}" width="230px" height="320px" alt="Постер">
+
+    <br>
+    <label for="image"> Постер фильма</label>
+    <input type="file" name="imageFile" id="image">
     <div style="color:red" th:if="${#fields.hasErrors('posterPath')}" th:errors="*{posterPath}">Description Error</div>
     <br/>
 
@@ -58,12 +60,16 @@
 
     <label for="tags">Тэги: </label>
     <select id="tags" th:object="${media}" th:field="*{tags}" multiple>
-        <option th:each="oneTag: ${tagList}"  th:value="${oneTag.getId()}" th:text="${oneTag.tagName}"></option>
+        <option th:each="oneTag: ${tagList}" th:value="${oneTag.getId()}" th:text="${oneTag.tagName}"></option>
     </select>
-    <input type="submit"  value="Создать произведение!"/>
-    <br>
-    <a href="/admin/adminPage">Вернуться на главную</a>
+    <input type="submit" value="Обновить"/>
 </form>
-
+<br>
+<form th:method="delete" th:action="@{/admin/media/{id}(id = ${media.getId()})}">
+    <input type="submit" value="Удалить"/>
+</form>
+<br>
+<hr/>
+<a href="/admin/allMedia">Вернуться к списку произведений</a>
 </body>
 </html>

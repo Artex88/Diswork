@@ -1,29 +1,31 @@
 package ru.naumenJavaCourse.WebProject.Diswork.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 public class MediaService {
     private final MediaRepository mediaRepository;
+
+    private static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/png", "image/webp");
+
+    private static final long MAX_IMAGE_SIZE = 204800;
 
     @Autowired
     public MediaService(MediaRepository mediaRepository) {
@@ -36,29 +38,13 @@ public class MediaService {
         mediaRepository.save(media);
     }
 
-    private void saveImage(Media media, MultipartFile imageFile) {
-        String absolutePathFolder = "src/main/webapp/resources/images/";
-        String imageFolder = "/resources/images/";
-        String format = ".png";
-        try {
-            var path = Paths.get(absolutePathFolder + media.getMediaName() + format);
-            Files.write(path, imageFile.getBytes());
-            media.setPosterPath(imageFolder + media.getMediaName() + format);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Transactional
+    public List<Media> getAll(){
+        return mediaRepository.findAll();
     }
-    @Transactional(readOnly = true)
-    public String getAvgRating(int mediaId){
-        Double sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
-        Double sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
-        double avgRating;
-        try {
-            avgRating = sumOfAllGrades / sumOfTimesWhenMediaGrated;
-        } catch (Exception e){
-            return "0";
-        }
-        return String.format("%.2f",avgRating);
+    @Transactional()
+    public void delete(int id){
+        mediaRepository.removeById(id);
     }
 
     @Transactional(readOnly = true)
@@ -67,13 +53,93 @@ public class MediaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Media> getAll(){
-        return mediaRepository.findAll();
+    public Media findById(int id){
+        Optional<Media> optional = mediaRepository.findById(id);
+        if (optional.isEmpty())
+            throw new EntityNotFoundException();
+        return optional.get();
     }
 
     @Transactional
-    public Media findById(int id){
-        return mediaRepository.findById(id).get();
+    public List<Media> findByType(Type type){
+        return mediaRepository.findByType(type);
+    }
+    @Transactional
+    public List<Media> findByStatus (Status status){
+        return mediaRepository.findByStatus(status);
+    }
+    @Transactional
+    public List<Media> findByTags (Set<Tag> tags){
+        return mediaRepository.findByTags(tags, tags.size());
+    }
+    @Transactional
+    public void upload(Media newMedia, int oldMediaId, MultipartFile imageFile){
+        newMedia.setId(oldMediaId);
+        if (imageFile.isEmpty())
+            newMedia.setPosterPath(this.findById(oldMediaId).getPosterPath());
+        else
+            saveImage(newMedia, imageFile);
+        mediaRepository.save(newMedia);
+    }
+
+    private void saveImage(Media media, MultipartFile imageFile) {
+        String contentType = validateImageAndGetContentType(imageFile);
+        String absolutePathFolder = "src/main/webapp/resources/images/";
+        String imageFolder = "/resources/images/";
+            try {
+                String posterPath = media.getPosterPath();
+                if (posterPath != null){
+                    Files.delete(Paths.get(absolutePathFolder + media.getMediaName() + "." + contentType));
+                }
+                var path = Paths.get(absolutePathFolder + media.getMediaName() +  "." + contentType);
+                Files.write(path, imageFile.getBytes());
+                media.setPosterPath(imageFolder + media.getMediaName() + "." + contentType);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+    }
+
+    private String validateImageAndGetContentType(MultipartFile imageFile){
+        if (imageFile.isEmpty() || imageFile.getSize() == 0)
+            throw new RuntimeException();
+        String contentType = imageFile.getContentType();
+        if (contentType == null || !ALLOWED_IMAGE_TYPES.contains(contentType))
+            throw new RuntimeException();
+        if (imageFile.getSize() > MAX_IMAGE_SIZE)
+            throw new RuntimeException();
+        return contentType.substring(6);
+    }
+
+    @Transactional(readOnly = true)
+    public void updateRating(int mediaId){
+        BigDecimal sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
+        BigDecimal sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
+        BigDecimal avgRating = null;
+        try {
+            avgRating = sumOfAllGrades.divide(sumOfTimesWhenMediaGrated, 2, RoundingMode.HALF_UP);
+        } catch (Exception e){
+            mediaRepository.updateMediaByRating(new BigDecimal(0), mediaId);
+        }
+
+        mediaRepository.updateMediaByRating(avgRating, mediaId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Media> getFilterMediaAndSort(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet, String orderSetting){
+        List<Media> mediaList =  this.filterMedia(type,status,episodeDuration,releasePeriod,tagSet);
+        if (Objects.equals(orderSetting, "id"))
+            mediaList.sort(Comparator.comparing(Media::getId));
+        else if(Objects.equals(orderSetting, "mediaName"))
+            mediaList.sort(Comparator.comparing(Media::getMediaName));
+        else if(Objects.equals(orderSetting, "yearOfRelease"))
+            mediaList.sort(Comparator.comparing(Media::getYearOfRelease, Comparator.reverseOrder()));
+        else if(Objects.equals(orderSetting, "rating"))
+            mediaList.sort(Comparator.comparing(Media::getRating, Comparator.reverseOrder()));
+        return mediaList;
+    }
+
+    public List<Media> filterMedia(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet ){
+        return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size());
     }
 
 }

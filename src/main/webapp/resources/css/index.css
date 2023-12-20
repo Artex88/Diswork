@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Times New R, sans-serif;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.containerLeft {
+    width: 1600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 450px;
+    row-gap: 5px;
+    gap: 20px;
+}
+
+.containerRight {
+    width: 300px;
+}
+.selected{
+    color: red;
+}
+.withoutComa{
+    list-style-type: none;
+}

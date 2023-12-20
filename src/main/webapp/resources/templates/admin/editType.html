@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diswork</title>
+</head>
+<body>
+<form th:method="patch" th:action="@{/admin/type/{id}(id = ${type.getId()})}" th:object="${type}">
+
+    <label for="typeName">Название типа произведения: </label>
+    <input type="text" th:field="*{typeName}" id="typeName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}">Name Error</div>
+    <br/>
+    <label for="description">Описание типа произведения: </label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+    <br/>
+    <input type="submit" value="Обновить!"/>
+
+</form>
+<br>
+
+<form th:method="delete" th:action="@{/admin/type/{id}(id = ${type.getId()})}">
+    <input type="submit" value="Удалить"/>
+</form>
+
+<br>
+<hr/>
+<a href="/admin/allTypes">Вернуться к списку типов произведений</a>
+</body>
+</html>

@@ -16,25 +16,24 @@ import java.util.Set;
 @Table(name = "media")
 public class Media {
 
-    private static final DecimalFormat decfor = new DecimalFormat("0.00");
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     @NotNull
-    @Size(min = 1, max = 32, message = "Название произведения не должно быть пустым и больше 32 символов")
+    @Size(min = 1, max = 64, message = "Название произведения не должно быть пустым и больше 32 символов")
     @NotEmpty(message = "Название не может быть пустым")
     private String mediaName;
     @Column(name = "description")
     @NotNull
+    @NotEmpty(message = "Описание не может быть пустым")
     @Size(max = 512, message = "Описанин произведения не должно превышать 512 символов")
     private String description;
 
     @Column(name = "poster")
     private String posterPath;
     @Column(name = "age_rating")
-    @NotNull
     @Size(min = 1, message = "Возрастной рейтинг не должнен быть пустым и больше 8 символов")
     private String ageRating;
     @Column(name = "duration")
@@ -55,8 +54,13 @@ public class Media {
     @NotNull
     private double rating;
 
-    @ManyToMany
-    @NotNull
+    @Column(name = "release_period")
+    private String releasePeriod;
+
+    @Column(name = "episode_duration")
+    private String episodeDuration;
+
+    @ManyToMany()
     @JoinTable(
             name = "media_tag",
             joinColumns = @JoinColumn(name = "media_id"),
@@ -64,18 +68,15 @@ public class Media {
     )
     private Set<Tag> tags;
 
-
-
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
-    @NotNull
     private Type type;
 
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToMany(mappedBy = "media", orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
 
     public Media() {
@@ -183,5 +184,21 @@ public class Media {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getReleasePeriod() {
+        return releasePeriod;
+    }
+
+    public void setReleasePeriod(String releasePeriod) {
+        this.releasePeriod = releasePeriod;
+    }
+
+    public String getEpisodeDuration() {
+        return episodeDuration;
+    }
+
+    public void setEpisodeDuration(String episodeDuration) {
+        this.episodeDuration = episodeDuration;
     }
 }

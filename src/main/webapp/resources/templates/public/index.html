@@ -3,13 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/resources/css/index.css?v=2" rel="stylesheet"/>
 </head>
 <body>
-    <tr th:each="media : ${medias}">
-        <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
-        <a th:text="${media.mediaName}" th:href="@{/index/media/{id}(id = ${media.id})}"></a>
-        <p th:text="${media.getType().typeName}"}></p>
-        <p th:text="${media.getYearOfRelease()}"}></p>
-    </tr>
+    <main>
+        <section class="containerLeft">
+            <div th:each="media : ${medias}">
+                <p><img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер"></p>
+                <p><a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a></p>
+                <p th:text="${media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+                <p th:text="${media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
+                <p th:text="'Рейтинг: ' + ${media.getRating()}"></p>
+            </div>
+        </section>
+        <aside class="containerRight">
+            <div>
+                <span><strong>СОРТИРОВКА:</strong></span>
+                <ul class="singleton" >
+                    <li th:attr="value=${'id'}, paramName='order'">По id</li>
+                    <li th:attr="value=${'mediaName'}, paramName='order'">По названию</li>
+                    <li th:attr="value=${'yearOfRelease'}, paramName='order'">По году выхода</li>
+                    <li th:attr="value=${'rating'}, paramName='order'">По рейтингу</li>
+                </ul>
+                <hr>
+            </div>
+            <div>
+                    <span><strong>Фильтрация:</strong></span>
+                <div> По тэгам
+                    <ul class="multiple withoutComa" >
+                        <li th:each="tag : ${tags}">
+                                <input class="tag-checkbox" th:attr="value=${tag.getId()}, paramName='tagIds'" th:text="${tag.getTagName()}" type="checkbox">
+                        </li>
+                    </ul>
+                </div>
+                <div> По типам
+                    <ul class="singleton"  >
+                        <li th:each="type : ${types}" th:text="${type.getTypeName()}" th:attr="value=${type.getId()},paramName='typeId'"></li>
+                    </ul>
+                </div>
+                <div > По статусу
+                    <ul class="singleton"  >
+                        <li th:each="status : ${statuses}" th:text="${status.getStatusName()}" th:attr="value=${status.getId()},paramName='statusId'"></li>
+                    </ul>
+                </div>
+                <div> По количеству серий
+                    <ul class="singleton" >
+                        <li th:text="${episodeDurations[0]} + ' (до 12 серий)'" th:attr="value=${episodeDurations[0]}, paramName='episodeDuration'"></li>
+                        <li th:text="${episodeDurations[1]} + ' (до 30 серий)'" th:attr="value=${episodeDurations[1]}, paramName='episodeDuration'"></li>
+                        <li th:text="${episodeDurations[2]} + ' (более 31 серии)'" th:attr="value=${episodeDurations[2]}, paramName='episodeDuration'"></li>
+                    </ul>
+                </div>
+                <div> По дате выхода
+                    <ul class="singleton" >
+                        <li th:each="releasePeriod : ${releasePeriods}" th:text="${releasePeriod}" th:attr="value=${releasePeriod}, paramName='releasePeriod'"></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </main>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/resources/js/index.js"></script>
 </html>
