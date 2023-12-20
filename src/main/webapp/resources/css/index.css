@@ -1,25 +1,30 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: Times New R, sans-serif;
 }
 
 main {
     display: flex;
-    justify-content: space-between; /* Распределение между контейнерами */
+    justify-content: space-between;
     padding: 20px;
 }
 
 .containerLeft {
-    display: flex; /* Располагаем дочерние элементы внутри по горизонтали */
-    flex-wrap: wrap; /* Разрешаем перенос строк, если не умещается */
-    gap: 20px; /* Расстояние между элементами */
-}
-
-.containerLeft > div {
-    flex-grow: 1; /* Растягиваем элементы по ширине */
+    width: 1600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 450px;
+    row-gap: 5px;
+    gap: 20px;
 }
 
 .containerRight {
-    width: 250px; /* Ширина блока containerRight */
+    width: 300px;
+}
+.selected{
+    color: red;
+}
+.withoutComa{
+    list-style-type: none;
 }

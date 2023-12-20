@@ -3,39 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Times New R, sans-serif;
-        }
-
-        main {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-
-        .containerLeft {
-            width: 1600px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            grid-template-rows: 450px;
-            row-gap: 5px;
-            gap: 20px;
-        }
-
-        .containerRight {
-            width: 300px;
-        }
-        .selected{
-            color: red;
-        }
-        .withoutComa{
-            list-style-type: none;
-        }
-
-    </style>
+    <link href="/resources/css/index.css?v=2" rel="stylesheet"/>
 </head>
 <body>
     <main>
@@ -62,7 +30,7 @@
             <div>
                     <span><strong>Фильтрация:</strong></span>
                 <div> По тэгам
-                    <ul class="multiple" >
+                    <ul class="multiple withoutComa" >
                         <li th:each="tag : ${tags}">
                                 <input class="tag-checkbox" th:attr="value=${tag.getId()}, paramName='tagIds'" th:text="${tag.getTagName()}" type="checkbox">
                         </li>
@@ -96,168 +64,5 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script>
-    let selectedItems = sessionStorage.getItem('selectedItems');
-    if (selectedItems) {
-        let selectedItemsParsed = JSON.parse(selectedItems);
-        for (let i = 0; i < selectedItemsParsed.length; i++) {
-            let item = selectedItemsParsed[i];
-            if (item.paramName === 'tagIds'){
-                for (let tagId = 0; tagId < item.value.length; tagId++) {
-                    let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[tagId] + '"]');
-                    if (selectedCheckBoxElement)
-                        selectedCheckBoxElement.prop("checked", true);
-                }
-            }
-            else {
-                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
-                if (selectedLiElement) {
-                    selectedLiElement.addClass('selected');
-                }
-            }
-        }
-        checkUrlParametersAndRemoveClass();
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        $("ul.multiple").on('click', 'li input', function () {
-            updateUrlParams()
-        });
-
-
-
-
-        $("ul.singleton li").on('click', function () {
-            let value = $(this).attr('value');
-            let paramName = $(this).attr('paramName');
-            let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
-
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-                removeUrlParameter(paramName);
-                let updatedItems = selectedItems.filter(function (item) {
-                    return item.paramName !== paramName || item.value !== value;
-                });
-                sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
-            }
-            else if (selectedItems.some(function (item) { return item.paramName === paramName})){
-                let item = selectedItems.find(function (item){
-                    return item.paramName === paramName;
-                });
-                let updatedItems = selectedItems.filter(function (item) {
-                    return item.paramName !== paramName;
-                });
-                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
-                selectedLiElement.removeClass('selected');
-                updatedItems.push({ paramName: paramName, value: value });
-                sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
-                $(this).addClass('selected');
-                addOrUpdateUrlParameter(paramName, value);
-            }
-            else{
-                selectedItems.push({ paramName: paramName, value: value });
-                sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-                $(this).addClass('selected');
-                addOrUpdateUrlParameter(paramName, value);
-            }
-            window.location.reload()
-        });
-    });
-
-    function updateUrlParams() {
-        let selectedTags = [];
-        $(".tag-checkbox:checked").each(function () {
-            selectedTags.push($(this).val());
-        });
-        addOrUpdateUrlParameter('tagIds', selectedTags.join(','))
-        let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
-        let updatedItems = selectedItems.filter(function (item) {
-            return item.paramName !== 'tagIds';
-        });
-        updatedItems.push({ paramName: 'tagIds', value: selectedTags });
-        sessionStorage.setItem('selectedItems', JSON.stringify(updatedItems));
-        window.location.reload()
-    }
-
-    function checkUrlParametersAndRemoveClass() {
-        let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
-        selectedItems.forEach(function(item) {
-            if (item.paramName === 'tagIds'){
-                let urlParams = new URLSearchParams(window.location.search);
-                let tagIdsParam = urlParams.get('tagIds');
-                let tagIdsArray = [];
-                if (tagIdsParam){
-                    tagIdsArray = tagIdsParam.split(',').map(Number);
-                    for (let i = 0; i < item.value.length; i++){
-                        let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[i] + '"]');
-                        if (!tagIdsArray.includes(parseInt(item.value[i])))
-                            selectedCheckBoxElement.prop("checked", false);
-                    }
-                } else{
-                    for (let i = 0; i < item.value.length; i++){
-                        let selectedCheckBoxElement = $('input[paramName="' + item.paramName + '"][value="' + item.value[i] + '"]');
-                        selectedCheckBoxElement.prop("checked", false)
-                }
-            }
-            } else{
-                let selectedLiElement = $('li[paramName="' + item.paramName + '"][value="' + item.value + '"]');
-                if (selectedLiElement && !urlParameterExists(item.paramName)) {
-                    selectedLiElement.removeClass('selected');
-                }
-            }
-        });
-    }
-    function urlParameterExists(paramName) {
-        let searchParams = new URLSearchParams(window.location.search);
-        return searchParams.has(paramName);
-    }
-
-    function addOrUpdateUrlParameter(key, value) {
-        let currentUrl = window.location.href;
-        let urlParts = currentUrl.split('?');
-
-        if (urlParts.length > 1) {
-            let queryParams = urlParts[1].split('&');
-            let paramFound = false;
-            let updatedParams = queryParams.map(function (param) {
-                let paramParts = param.split('=');
-                if (paramParts[0] === key) {
-                    paramFound = true;
-                    return key + '=' + value;
-                }
-                return param;
-            });
-            if (!paramFound)
-                updatedParams.push(key + '=' + value);
-            urlParts[1] = updatedParams.join('&');
-        } else
-            urlParts.push(key + '=' + value);
-
-        let newUrl = urlParts.join('?');
-        window.history.replaceState({path: newUrl}, '', newUrl);
-    }
-
-    function removeUrlParameter(parameterName) {
-        let currentUrl = window.location.href;
-        let urlParts = currentUrl.split('?');
-        if (urlParts.length > 1) {
-            let queryParams = urlParts[1].split('&');
-            let paramFound = false;
-            let updatedParams = queryParams.filter(function (param) {
-                let paramParts = param.split('=');
-                if (paramParts[0] === parameterName) {
-                    paramFound = true;
-                    return false;
-                }
-                return true;
-            });
-            if (paramFound) {
-                urlParts[1] = updatedParams.join('&');
-                let newUrl = urlParts.join('?');
-                window.history.replaceState({path: newUrl}, '', newUrl);
-            }
-        }
-    }
-</script>
+<script src="/resources/js/index.js"></script>
 </html>
