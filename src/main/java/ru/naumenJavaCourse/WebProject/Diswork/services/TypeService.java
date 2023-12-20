@@ -4,8 +4,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
+import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.TypeRepository;
 
 
@@ -16,9 +19,12 @@ import java.util.Optional;
 public class TypeService {
     private final TypeRepository typeRepository;
 
+    private final MediaService mediaService;
+
     @Autowired
-    public TypeService(TypeRepository typeRepository) {
+    public TypeService(TypeRepository typeRepository, MediaService mediaService) {
         this.typeRepository = typeRepository;
+        this.mediaService = mediaService;
     }
 
     @Transactional
@@ -52,6 +58,11 @@ public class TypeService {
 
     @Transactional()
     public void delete(int id){
-        typeRepository.removeById(id);
+        Type typeToDelete = this.findById(id);
+        List<Media> mediaList = mediaService.findByType(typeToDelete);
+        for (Media media : mediaList){
+            media.setType(null);
+        }
+        typeRepository.delete(typeToDelete);
     }
 }

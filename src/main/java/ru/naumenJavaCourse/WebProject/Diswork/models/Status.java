@@ -21,7 +21,7 @@ public class Status {
     @Size(min = 1, max = 32, message = "Название статуса не должно быть пустым и больше 32 символов")
     private String statusName;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "status")
     private List<Media> mediaList;
 
     public Status() {

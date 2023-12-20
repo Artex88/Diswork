@@ -4,7 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
+import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.TagRepository;
 
 import java.util.*;
@@ -13,9 +15,13 @@ import java.util.*;
 public class TagService {
 
     private final TagRepository tagRepository;
+
+    private final MediaService mediaService;
+
     @Autowired
-    public TagService(TagRepository tagRepository) {
+    public TagService(TagRepository tagRepository, MediaService mediaService) {
         this.tagRepository = tagRepository;
+        this.mediaService = mediaService;
     }
 
     @Transactional
@@ -49,7 +55,12 @@ public class TagService {
 
     @Transactional()
     public void delete(int id){
-        tagRepository.removeById(id);
+        Tag tagToDelete = this.findById(id);
+        List<Media> mediaList = mediaService.findByTags(Set.of(tagToDelete));
+        for (Media media : mediaList){
+            media.getTags().remove(tagToDelete);
+        }
+        tagRepository.delete(tagToDelete);
     }
 
     @Transactional

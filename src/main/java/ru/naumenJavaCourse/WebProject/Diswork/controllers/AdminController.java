@@ -2,6 +2,7 @@ package ru.naumenJavaCourse.WebProject.Diswork.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -118,9 +119,17 @@ public class AdminController {
     }
 
     @PostMapping("/createMedia")
-    public String createMedia(@ModelAttribute("media") @Valid Media media, @RequestPart(name = "imageFile") MultipartFile imageFile, BindingResult bindingResult){
-        if (bindingResult.hasErrors() || imageFile == null)
+    public String createMedia(@ModelAttribute("media") @Valid Media media, BindingResult bindingResult, @RequestPart(name = "imageFile")  @NotNull(message = "Файл изображения не может быть пустым") MultipartFile imageFile, Model model){
+        if (bindingResult.hasErrors() || (imageFile == null || imageFile.isEmpty())) {
+            if (imageFile == null || imageFile.isEmpty()) {
+                bindingResult.rejectValue("posterPath", "NotEmpty", "Файл изображения не может быть пустым");
+            }
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("tagList", tagService.getAll());
+            model.addAttribute("typeList", typeService.getAll());
+            model.addAttribute("statusList", statusService.getAll());
             return "admin/createMedia";
+        }
         mediaValidator.validate(media, bindingResult);
 
         mediaService.save(media, imageFile);

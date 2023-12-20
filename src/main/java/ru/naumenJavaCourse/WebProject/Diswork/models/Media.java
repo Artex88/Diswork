@@ -27,13 +27,13 @@ public class Media {
     private String mediaName;
     @Column(name = "description")
     @NotNull
+    @NotEmpty(message = "Описание не может быть пустым")
     @Size(max = 512, message = "Описанин произведения не должно превышать 512 символов")
     private String description;
 
     @Column(name = "poster")
     private String posterPath;
     @Column(name = "age_rating")
-    @NotNull
     @Size(min = 1, message = "Возрастной рейтинг не должнен быть пустым и больше 8 символов")
     private String ageRating;
     @Column(name = "duration")
@@ -61,7 +61,6 @@ public class Media {
     private String episodeDuration;
 
     @ManyToMany()
-    @NotNull
     @JoinTable(
             name = "media_tag",
             joinColumns = @JoinColumn(name = "media_id"),
@@ -71,14 +70,13 @@ public class Media {
 
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
-    @NotNull
     private Type type;
 
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToMany(mappedBy = "media", orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
 
     public Media() {

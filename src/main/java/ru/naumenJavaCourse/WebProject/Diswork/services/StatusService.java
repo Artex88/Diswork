@@ -8,19 +8,24 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.Media;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Status;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Tag;
 import ru.naumenJavaCourse.WebProject.Diswork.models.Type;
+import ru.naumenJavaCourse.WebProject.Diswork.repositories.MediaRepository;
 import ru.naumenJavaCourse.WebProject.Diswork.repositories.StatusRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class StatusService {
 
     private final StatusRepository statusRepository;
 
+    private final MediaService mediaService;
+
     @Autowired
-    public StatusService(StatusRepository statusRepository) {
+    public StatusService(StatusRepository statusRepository, MediaService mediaService) {
         this.statusRepository = statusRepository;
+        this.mediaService = mediaService;
     }
 
     @Transactional
@@ -54,6 +59,11 @@ public class StatusService {
 
     @Transactional()
     public void delete(int id){
-        statusRepository.removeById(id);
+        Status statusToDelete = this.findById(id);
+        List<Media> mediaList = mediaService.findByStatus(statusToDelete);
+        for (Media media : mediaList){
+            media.setStatus(null);
+        }
+        statusRepository.delete(statusToDelete);
     }
 }

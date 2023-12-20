@@ -11,8 +11,8 @@
             <div th:each="media : ${medias}">
                 <p><img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер"></p>
                 <p><a th:text="${media.getMediaName()}" th:href="@{/index/media/{id}(id = ${media.getId()})}"></a></p>
-                <p th:text="${media.getType().typeName}"></p>
-                <p th:text="${media.getYearOfRelease()}"></p>
+                <p th:text="${media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+                <p th:text="${media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
                 <p th:text="'Рейтинг: ' + ${media.getRating()}"></p>
             </div>
         </section>

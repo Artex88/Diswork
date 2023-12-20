@@ -61,6 +61,18 @@ public class MediaService {
     }
 
     @Transactional
+    public List<Media> findByType(Type type){
+        return mediaRepository.findByType(type);
+    }
+    @Transactional
+    public List<Media> findByStatus (Status status){
+        return mediaRepository.findByStatus(status);
+    }
+    @Transactional
+    public List<Media> findByTags (Set<Tag> tags){
+        return mediaRepository.findByTags(tags, tags.size());
+    }
+    @Transactional
     public void upload(Media newMedia, int oldMediaId, MultipartFile imageFile){
         newMedia.setId(oldMediaId);
         if (imageFile.isEmpty())

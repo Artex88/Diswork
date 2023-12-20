@@ -16,19 +16,19 @@
 <body>
 
 <section>
-<h1  th:text="${media.getMediaName()}"></h1>
+<h1  th:text="${ media.getMediaName() != null ? media.getMediaName() : 'Название не указано'}"></h1>
 <img  th:src="${media.getPosterPath()}" width="230px" height="320px" alt="Постер">
-<p  th:text="'Тип: ' + ${media.getType().getTypeName()}"></p>
-    <p  th:text="'Год выхода: ' + ${media.getYearOfRelease()}"></p>
-<p  th:text="'Количество эпизодов: ' + ${media.getEpisodeCount()}"></p>
-<p  th:text="'Длительность эпизода: ' + ${media.getDuration()} + ' минут'"></p>
-<p  th:text="'Статус: ' + ${media.getStatus().getStatusName()}"></p>
+<p  th:text="'Тип: ' + ${ media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+    <p  th:text="'Год выхода: ' + ${ media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
+<p  th:text="'Количество эпизодов: ' + ${media.getEpisodeCount() != null ? media.getEpisodeCount() : ' Кол-во  эпизодов не указано'}"></p>
+<p  th:text="'Длительность эпизода: ' + ${media.getDuration() != null ? media.getDuration() + ' минут' : 'Длительность не указана'}"></p>
+<p  th:text="'Статус: ' + ${media.getStatus() != null ? media.getStatus().getStatusName() : 'Статус не указан'}"></p>
 <p>Тэги:</p>
 <tr th:each="tag: ${media.getTags()}">
     <span th:text="${tag.getTagName()}"></span>
 </tr>
-<p  th:text="'Возрастной рейтинг: ' + ${media.getAgeRating()}"></p>
-<p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription()}"></p>
+<p  th:text="'Возрастной рейтинг: ' + ${media.getAgeRating() != null ? media.getAgeRating() : 'Возрастной рейтинг не указан'}"></p>
+<p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription() != null ? media.getDescription() : 'описание не указано' }"></p>
     <p th:text = "'Рейтинг: ' + ${avgRating}"></p>
 </section>
 <section>
