@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.DecimalFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +29,7 @@ public class Media {
     @Column(name = "description")
     @NotNull
     @NotEmpty(message = "Описание не может быть пустым")
-    @Size(max = 512, message = "Описанин произведения не должно превышать 512 символов")
+    @Size(max = 1024, message = "Описанин произведения не должно превышать 512 символов")
     private String description;
 
     @Column(name = "poster")
@@ -76,10 +77,17 @@ public class Media {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-    @OneToMany(mappedBy = "media", orphanRemoval = true)
+    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
 
+    @OneToMany(mappedBy = "media")
+    private List<Comment> commentList;
+
     public Media() {
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
     }
 
     public void setTags(Set<Tag> tags) {
@@ -166,9 +174,6 @@ public class Media {
         this.duration = duration;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
 
     public Set<UserMedia> getMediaUser() {
         return mediaUser;
@@ -200,5 +205,13 @@ public class Media {
 
     public void setEpisodeDuration(String episodeDuration) {
         this.episodeDuration = episodeDuration;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,8 +43,11 @@ public class User {
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserMedia> userMedia = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Comment> commentList;
 
     public User() {
     }
