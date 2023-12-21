@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Diswork</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="/resources/css/toastr.css" rel="stylesheet"/>
     <style>
         #addButton {
             display: block;
@@ -11,7 +13,6 @@
             display: none;
         }
     </style>
-    <link href="/resources/css/toastr.css" rel="stylesheet"/>
 </head>
 <body>
 
@@ -24,43 +25,62 @@
 <p  th:text="'Длительность эпизода: ' + ${media.getDuration() != null ? media.getDuration() + ' минут' : 'Длительность не указана'}"></p>
 <p  th:text="'Статус: ' + ${media.getStatus() != null ? media.getStatus().getStatusName() : 'Статус не указан'}"></p>
 <p>Тэги:</p>
+    <p>
 <tr th:each="tag: ${media.getTags()}">
     <span th:text="${tag.getTagName()}"></span>
 </tr>
+    </p>
 <p  th:text="'Возрастной рейтинг: ' + ${media.getAgeRating() != null ? media.getAgeRating() : 'Возрастной рейтинг не указан'}"></p>
 <p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription() != null ? media.getDescription() : 'описание не указано' }"></p>
     <p th:text = "'Рейтинг: ' + ${avgRating}"></p>
 </section>
 
 <section>
-<td><button id="addButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
+<td><button class="btn btn-success" id="addButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
     <div id= "authorizedUserSection">
-<td><button id="deleteButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndDeleteMedia(this.getAttribute('one'), this.getAttribute('two'))">Удалить из избранного</button></td>
+<td><button class="btn btn-danger" id="deleteButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndDeleteMedia(this.getAttribute('one'), this.getAttribute('two'))">Удалить из избранного</button></td>
     <label id ="valueSelectLabel" for="valueSelect">Оцените произведение:</label>
     <select id="valueSelect" name="selectedValue" th:value="*{grading.getGrade()}">
         <option id="valueOption" th:each="value : ${#numbers.sequence(1, 10)}" th:value="${value}" th:text="${value}"></option>
     </select>
-    <td><button id="gradingButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAssessmentMedia(this.getAttribute('one'), this.getAttribute('two'))">Оценить</button></td>
+    <td><button class="btn btn-success" id="gradingButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAssessmentMedia(this.getAttribute('one'), this.getAttribute('two'))">Оценить</button></td>
     <div id="gradeTextArea" ></div>
     </div>
 </section>
-<section>
-    <div>
-        <h2>Написать комментарий</h2>
 
-        <form action="/submit-comment" method="post" th:object="${commentForm}">
-            <label for="comment">Ваш комментарий:</label>
-            <textarea id="comment" name="comment" rows="4" cols="50" th:field="*{commentText}"></textarea>
+<br>
+<a href="/index">Список всех произведений</a>
 
-            <button type="submit">Отправить комментарий</button>
+<section class="comment-section mt-4">
+    <div class="container-fluid">
+        <h4 class="comment-title">Написать комментарий:</h4>
+        <form th:method="POST" th:action="@{/user/comment/add}" th:object="${commentForm}" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Ваш комментарий:</label>
+                <textarea id="comment" name="comment" rows="2" th:field="*{commentText}" class="form-control col-6" required></textarea>
+                <div class="invalid-feedback">Пожалуйста, введите ваш комментарий.</div>
+            </div>
+            <input type="hidden" th:value="${media.getId()}" th:attr="name='media'" />
+            <button type="submit" class="btn btn-primary">Отправить комментарий</button>
         </form>
     </div>
-
 </section>
 
-
-
-
+<section class="comments mt-4 mx-0">
+    <div class="container-fluid">
+        <h3>Комментарии:</h3>
+        <div th:each="comment: ${media.getCommentList()}" class="card mb-3">
+            <div class="card-body">
+                <h4 th:inline="text" class="card-title fw-bold">
+                    Автор: [[${comment.getUser().getUsername()}]]
+                </h4>
+                <p class="card-text" th:inline="text">
+                    Комментарий: [[${comment.getCommentText()}]]
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
 
 
@@ -72,5 +92,6 @@
 <script src="/resources/js/mediaDisplay.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/resources/js/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ import ru.naumenJavaCourse.WebProject.Diswork.models.*;
 import ru.naumenJavaCourse.WebProject.Diswork.services.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/index")
@@ -77,6 +78,7 @@ public class IndexController {
         }
 
         model.addAttribute("grade", grade);
+        media.getCommentList().sort(Comparator.comparing(Comment::getLocalDateTime));
         model.addAttribute("media", media);
         model.addAttribute("grading", new GradingDTO());
         model.addAttribute("commentForm", new Comment());

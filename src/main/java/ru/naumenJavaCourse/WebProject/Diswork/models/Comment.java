@@ -19,8 +19,6 @@ public class Comment {
     private String commentText;
 
     @Column(name = "comment_create_time")
-    @NotNull
-    @NotEmpty
     private LocalDateTime localDateTime;
 
     @ManyToOne
