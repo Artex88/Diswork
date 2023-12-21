@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.DecimalFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -78,6 +79,9 @@ public class Media {
 
     @OneToMany(mappedBy = "media", orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
+
+    @OneToMany(mappedBy = "media", orphanRemoval = true)
+    private List<Comment> commentList;
 
     public Media() {
     }
@@ -200,5 +204,13 @@ public class Media {
 
     public void setEpisodeDuration(String episodeDuration) {
         this.episodeDuration = episodeDuration;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

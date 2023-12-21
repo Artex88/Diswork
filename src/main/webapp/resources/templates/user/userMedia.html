@@ -9,8 +9,8 @@
 <tr th:each="media : ${userMediaList}">
     <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
     <a th:text="${media.mediaName}" th:href="@{/index/media/{id}(id = ${media.id})}"></a>
-    <p th:text="${media.getType().typeName}"}></p>
-    <p th:text="${media.getYearOfRelease()}"}></p>
+    <p  th:text="'Тип: ' + ${ media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+    <p  th:text="'Год выхода: ' + ${ media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
 </tr>
 </body>
 </html>
