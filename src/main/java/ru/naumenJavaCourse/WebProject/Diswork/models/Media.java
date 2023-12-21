@@ -77,7 +77,7 @@ public class Media {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-    @OneToMany(mappedBy = "media", orphanRemoval = true)
+    @OneToMany(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserMedia> mediaUser = new HashSet<>();
 
     @OneToMany(mappedBy = "media", orphanRemoval = true)

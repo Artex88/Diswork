@@ -31,6 +31,7 @@
 <p  th:text="'ОПИСАНИЕ: ' + ${media.getDescription() != null ? media.getDescription() : 'описание не указано' }"></p>
     <p th:text = "'Рейтинг: ' + ${avgRating}"></p>
 </section>
+
 <section>
 <td><button id="addButton" th:one="${media.getId()}" th:two="${_csrf.token}" onclick="fetchAndAddMedia(this.getAttribute('one'), this.getAttribute('two'))">Добавить произведение в избранное</button></td>
     <div id= "authorizedUserSection">
@@ -43,6 +44,26 @@
     <div id="gradeTextArea" ></div>
     </div>
 </section>
+<section>
+    <div>
+        <h2>Написать комментарий</h2>
+
+        <form action="/submit-comment" method="post" th:object="${commentForm}">
+            <label for="comment">Ваш комментарий:</label>
+            <textarea id="comment" name="comment" rows="4" cols="50" th:field="*{commentText}"></textarea>
+
+            <button type="submit">Отправить комментарий</button>
+        </form>
+    </div>
+
+</section>
+
+
+
+
+
+
+
 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 <input type="hidden" id="isAddButtonHidden"  th:value="${isAddButtonHidden}">
 <input type="hidden" id="grade"  th:value="${grade}">

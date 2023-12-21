@@ -43,7 +43,7 @@ public class User {
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserMedia> userMedia = new HashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)

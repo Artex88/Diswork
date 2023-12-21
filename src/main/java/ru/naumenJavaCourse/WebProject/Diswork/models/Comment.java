@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "comment")
 public class Comment {
     @Id
@@ -15,6 +17,11 @@ public class Comment {
     @NotNull
     @NotEmpty
     private String commentText;
+
+    @Column(name = "comment_create_time")
+    @NotNull
+    @NotEmpty
+    private LocalDateTime localDateTime;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
@@ -70,5 +77,13 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 }

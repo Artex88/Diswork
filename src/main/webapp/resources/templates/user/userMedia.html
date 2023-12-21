@@ -4,13 +4,27 @@
     <meta charset="UTF-8">
     <title>Diswork</title>
 </head>
+    <style>
+        .container {
+            width: 1600px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 450px;
+            row-gap: 5px;
+            gap: 20px;
+        }
+    </style>
 <body>
 <h1> Избранное</h1>
-<tr th:each="media : ${userMediaList}">
-    <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
-    <a th:text="${media.mediaName}" th:href="@{/index/media/{id}(id = ${media.id})}"></a>
-    <p  th:text="'Тип: ' + ${ media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
-    <p  th:text="'Год выхода: ' + ${ media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
-</tr>
+<main>
+    <section class="container">
+        <div  th:each="media : ${userMediaList}">
+            <img th:src="${media.getPosterPath()}" width="170px" height="240px" alt = "Постер">
+            <a th:text="${media.mediaName}" th:href="@{/index/media/{id}(id = ${media.id})}"></a>
+            <p  th:text="'Тип: ' + ${ media.getType() != null ? media.getType().getTypeName() : ' Тип не указан'}"></p>
+            <p  th:text="'Год выхода: ' + ${ media.getYearOfRelease() != null ? media.getYearOfRelease() : ' Год релиза не указан'}"></p>
+        </div>
+    </section>
+</main>
 </body>
 </html>

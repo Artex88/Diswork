@@ -79,6 +79,7 @@ public class IndexController {
         model.addAttribute("grade", grade);
         model.addAttribute("media", media);
         model.addAttribute("grading", new GradingDTO());
+        model.addAttribute("commentForm", new Comment());
         model.addAttribute("avgRating", media.getRating());
         return "public/mediaDisplay";
     }
