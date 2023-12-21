@@ -114,14 +114,13 @@ public class MediaService {
     public void updateRating(int mediaId){
         BigDecimal sumOfAllGrades = mediaRepository.getTotalNumberOfRatingPointsRating(mediaId);
         BigDecimal sumOfTimesWhenMediaGrated = mediaRepository.getNumberOfTimesWhenMediaGraded(mediaId);
-        BigDecimal avgRating = null;
+        BigDecimal avgRating;
         try {
             avgRating = sumOfAllGrades.divide(sumOfTimesWhenMediaGrated, 2, RoundingMode.HALF_UP);
+            mediaRepository.updateMediaByRating(avgRating, mediaId);
         } catch (Exception e){
             mediaRepository.updateMediaByRating(new BigDecimal(0), mediaId);
         }
-
-        mediaRepository.updateMediaByRating(avgRating, mediaId);
     }
 
     @Transactional(readOnly = true)
