@@ -137,7 +137,7 @@ public class MediaService {
             mediaList.sort(Comparator.comparing(Media::getRating, Comparator.reverseOrder()));
         return mediaList;
     }
-
+    @Transactional
     public List<Media> filterMedia(Type type, Status status, String episodeDuration, String releasePeriod, Set<Tag> tagSet ){
         return mediaRepository.filter(type, status, releasePeriod, episodeDuration, tagSet, tagSet.size());
     }
